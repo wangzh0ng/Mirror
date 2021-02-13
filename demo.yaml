@@ -1,0 +1,54 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: 配置演示
+
+jobs:
+    build: # 用于标识job id，可任意命名
+        name: 当前job名称
+        runs-on: ubuntu-latest # 运行环境
+        if: github.event.repository.owner.id == github.event.sender.id # 判断当前点击star的人是否是自己
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【配置演示】"
+              timeout-minutes: 350 # 脚本运行超时时间
+              run: |
+                  node source_of_happiness.js
+              env:
+                  # 推送专用
+                  PUSH_KEY: ${{ secrets.PUSH_KEY }} # 微信推送 http://sc.ftqq.com/3.version
+                  BARK_PUSH: ${{ secrets.BARK_PUSH }} # BARK推送
+                  BARK_SOUND: ${{ secrets.BARK_SOUND }} # bark推送声音设置，例如choo,具体值请在bark-推送铃声-查看所有铃声
+                  TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }} # tg推送,填写自己申请@BotFather的Token,如10xxx4:AAFcqxxxxgER5uw
+                  TG_USER_ID: ${{ secrets.TG_USER_ID }} # tg推送,填写@getuseridbot中获取到的纯数字ID
+                  TG_PROXY_HOST: ${{ secrets.TG_USER_ID }} # Telegram 代理的IP,例子：http代理 http://127.0.0.1:1080 则填写 127.0.0.1
+                  TG_PROXY_PORT: ${{ secrets.TG_PROXY_PORT }} # Telegram 代理的Port,例子：http代理 http://127.0.0.1:1080 则填写 1080
+                  DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN }} # 钉钉推送官方文档 ,只需https://oapi.dingtalk.com/robot/send?access_token=XXX 等于符号后面的XXX， 注：如果钉钉推送只填写DD_BOT_TOKEN，那么安全设置需勾选自定义关键词，内容输入输入账号即可，其他安全设置不要勾选
+                  DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET }} # 密钥，机器人安全设置页面，加签一栏下面显示的SEC开头的字符串 , 注:填写了DD_BOT_TOKEN和DD_BOT_SECRET，钉钉机器人安全设置只需勾选加签即可，其他选项不要勾选
+                  IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY }} # iGot聚合推送，支持多方式推送，确保消息可达. 参考 https://wahao.github.io/Bark-MP-helper
+                  QQ_SKEY: ${{ secrets.QQ_SKEY }} # QQ酷推, 酷推skey ,https://cp.xuthus.cc/docs
+                  QQ_MODE: ${{ secrets.QQ_MODE }} # QQ酷推模式,酷推推送方式默认为私聊send推送，可以填写group改变为群聊推送
+                  QYWX_KEY: ${{ secrets.QYWX_KEY }} # 企业微信
+                  QYWX_AM: ${{ secrets.QYWX_AM }} # 企业微信
+                  PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }} # pushplus推送，微信扫码登录后一对一推送或一对多推送下面的token(您的Token)，不提供PUSH_PLUS_USER则默认为一对一推送 https://pushplus.hxtrip.com/
+                  PUSH_PLUS_USER: ${{ secrets.PUSH_PLUS_USER }} # 一对多推送的“群组编码”（一对多推送下面->您的群组(如无则新建)->群组编码，如果您是创建群组人。也需点击“查看二维码”扫描绑定，否则不能接受群组消息推送）
+                  # 安全配置
+                  CORE_URL: ${{ secrets.CORE_URL }} # 核心注入js的执行
+                  AES_IV: ${{ secrets.AES_IV }} # 针对部分需下载的文件,需要进行aes解密
+                  AES_KEY: ${{ secrets.AES_KEY }} # 针对部分需下载的文件,需要进行aes解密
+                  EXTEND_URL: ${{ secrets.EXTEND_URL }} # 额外的下载文件,以确保整体文件运行不缺失
+                  # 通用配置
+                  JD_COOKIE: ${{ secrets.JD_COOKIE }} # JDcookie,多个账号的cookie使用&隔开或者换行。具体获取参考https://github.com/lxk0301/jd_scripts/wiki/GetCookies
+                  JD_USER_AGENT: ${{ secrets.JD_USER_AGENT }}
+                  JD_DEBUG: ${{ secrets.JD_DEBUG }} # 运行脚本时，是否显示log,默认显示。改成false表示不显示，注重隐私的人可以在设置secret -> Name:JD_DEBUG,Value:false
+                  # 额外配置
+                  SMART_REPLACE: ${{ secrets.SMART_REPLACE }} # 通用替换规则,支持文字替换和正则替换,数据会进行base64解密后使用,[{"match":"要替换的内容",replace:"替换后的内容","desc":"方便自己查看的内容描述","condition":"替换的前提条件,没有就不要填"}]
+                  POINT_REPLACE: W3sibWF0Y2giOiJpZihKU09OLnN0cmluZ2lmeShwcm9jZXNzLmVudikuaW5kZXhPZignR0lUSFVCJyk+LTEpIHByb2Nlc3MuZXhpdCgwKSIsInJlcGxhY2UiOiIiLCJkZXNjIjoi56e76Zmk6ISa5pys5YaFQUPpmZDliLYiLCJjb25kaXRpb24iOiIifSx7Im1hdGNoIjoidW5kZWZpbmVkXCIhPXR5cGVvZiBwcm9jZXNzJiZKU09OLnN0cmluZ2lmeShwcm9jZXNzLmVudikuaW5kZXhPZihcIkdJVEhVQlwiKT4tMSYmcHJvY2Vzcy5leGl0KDApOyIsInJlcGxhY2UiOiIiLCJkZXNjIjoi56e76ZmkRW52LUFD6ZmQ5Yi2IiwiY29uZGl0aW9uIjoiIn1d # 自定义的替换规则,支持文字替换和正则替换,数据会进行base64解密后使用,[{"match":"要替换的内容",replace:"替换后的内容","desc":"方便自己查看的内容描述","condition":"替换的前提条件,没有就不要填"}]

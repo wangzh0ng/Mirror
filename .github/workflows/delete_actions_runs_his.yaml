@@ -1,0 +1,27 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: DELTE_HISTORY_RUNS
+
+on:
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【删除历史运行数据】"
+              run: |
+                  node javascript/delete_actions_runs_his.js
+              env:
+                  GITHUB_TOKEN: ${{ secrets.PAT }}

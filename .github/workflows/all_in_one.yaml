@@ -1,0 +1,540 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: ALL_IN_ONE
+
+on:
+    workflow_dispatch:
+    schedule:
+        - cron: "0 16 * * *"
+    watch:
+        types: [started]
+    repository_dispatch:
+        types: all_in_one
+
+env:
+    # 推送专用
+    PUSH_KEY: ${{ secrets.PUSH_KEY }}
+    BARK_PUSH: ${{ secrets.BARK_PUSH }}
+    BARK_SOUND: ${{ secrets.BARK_SOUND }}
+    TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+    TG_USER_ID: ${{ secrets.TG_USER_ID }}
+    DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN }}
+    DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET }}
+    IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY }}
+    QQ_SKEY: ${{ secrets.QQ_SKEY }}
+    QQ_MODE: ${{ secrets.QQ_MODE }}
+    QYWX_KEY: ${{ secrets.QYWX_KEY }}
+    QYWX_AM: ${{ secrets.QYWX_AM }}
+    PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
+    PUSH_PLUS_USER: ${{ secrets.PUSH_PLUS_USER }}
+    # 安全配置
+    CORE_URL: ${{ secrets.CORE_URL }}
+    AES_IV: ${{ secrets.AES_IV }}
+    AES_KEY: ${{ secrets.AES_KEY }}
+    EXTEND_URL: ${{ secrets.EXTEND_URL }}
+    # 通用配置
+    JD_COOKIE: ${{ secrets.JD_COOKIE }}
+    JD_USER_AGENT: ${{ secrets.JD_USER_AGENT }}
+    JD_DEBUG: ${{ secrets.JD_DEBUG }}
+    # 额外配置
+    SMART_REPLACE: ${{ secrets.SMART_REPLACE }} # 通用替换规则,支持文字替换和正则替换,数据会进行base64解密后使用,[{"match":"要替换的内容",replace:"替换后的内容","desc":"方便自己查看的内容描述","condition":"替换的前提条件,没有就不要填"}]
+
+jobs:
+    jd_bean_sign:
+        name: 每日签到
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD每日签到】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_bean_sign.js
+                  # 独立配置
+                  JD_BEAN_STOP: ${{ secrets.JD_BEAN_STOP }} # 自定义延迟签到,单位毫秒. 默认分批并发无延迟. 延迟作用于每个签到接口, 如填入延迟则切换顺序签到(耗时较长),如需填写建议输入数字1
+                  JD_BEAN_SIGN_STOP_NOTIFY: ${{ secrets.JD_BEAN_SIGN_STOP_NOTIFY || github.event.client_payload.JD_BEAN_SIGN_STOP_NOTIFY}} # jd_bean_sign.js脚本运行后不推送签到结果通知，默认推送，填true表示不发送通知
+                  JD_BEAN_SIGN_NOTIFY_SIMPLE: ${{ secrets.JD_BEAN_SIGN_NOTIFY_SIMPLE || github.event.client_payload.JD_BEAN_SIGN_NOTIFY_SIMPLE}} # jd_bean_sign.js脚本运行后推送签到结果简洁版通知，默认推送全部签到结果，填true表示推送简洁通知
+    jd_bean_home:
+        name: 京豆额外奖励
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【京豆额外奖励】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_bean_home.js
+    jd_bean_change:
+        name: 京豆昨日收益
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【京豆昨日收益】"
+              timeout-minutes: 350
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_bean_change.js
+    jd_blueCoin:
+        name: 超市领蓝币
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD超市领蓝币】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_blueCoin.js
+                  # 独立配置
+                  MARKET_COIN_TO_BEANS: ${{ secrets.MARKET_COIN_TO_BEANS }} # JD超市兑换京豆数量，可输入值为20或者1000的数字或者其他商品的名称,例如碧浪洗衣凝珠
+                  MARKET_REWARD_NOTIFY: ${{ secrets.MARKET_REWARD_NOTIFY }} # JD超市兑换奖品推送开关，false为否(发送推送通知消息),true为是(即：不发送推送通知消息)
+                  SUPERMARKET_UPGRADE: ${{ secrets.SUPERMARKET_UPGRADE }} # JD超市自动升级，自动升级,顺序:解锁升级商品、升级货架,true表示自动升级,false表示关闭自动升级
+    jd_bookshop:
+        name: 口袋书店
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【口袋书店】"
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_bookshop.js
+                  #专属配置
+                  BOOKSHOP_SHARECODES: ${{ secrets.BOOKSHOP_SHARECODES }} # JD书店互助码,同一个JD账号的好友互助码用@隔开,不同JD账号互助码用&或者换行隔开
+                  IGNORE_COOKIE_BOOKSHOP: ${{ secrets.IGNORE_COOKIE_BOOKSHOP }} #口袋书店禁用某些cookie的执行,因为通知太烦了呀,比如要禁用第2和第四个的执行,则填入[2,4]即可,包含中括号哦
+    jd_car:
+        name: 汽车
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD汽车】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_car.js
+    jd_cash:
+        name: 签到领现金
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【签到领现金】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_cash.js
+                  # 独立配置
+                  JD_CASH_SHARECODES: ${{ secrets.JD_CASH_SHARECODES }} # 签到领现金互助码,同一个JD账号的好友互助码用@隔开,不同JD账号互助码用&或者换行隔开
+    jd_club_lottery:
+        name: 摇京豆
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【摇京豆】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_club_lottery.js
+    jd_crazy_joy:
+        name: 疯狂的JOY签到
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【疯狂的JOY签到】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_crazy_joy.js
+                  # 独立配置
+                  JDJOY_HELPSELF: ${{ secrets.JDJOY_HELPSELF }} # 疯狂的joy循环助力，`true`表示循环助力,`false`表示不循环助力，默认不开启循环助力。
+                  JDJOY_APPLYJDBEAN: ${{ secrets.JDJOY_APPLYJDBEAN }} # 疯狂的joy京豆兑换，目前最小值为500/1000京豆，默认不开启京豆兑换。
+                  BUY_JOY_LEVEL: ${{ secrets.BUY_JOY_LEVEL }} # 疯狂的JOY自动购买什么等级的
+                  JDJOY_SHARECODES: ${{ secrets.JDJOY_SHARECODES }} # 疯狂的JOY互助码,同一个JD账号的好友互助码用@隔开,不同JD账号互助码用&或者换行隔开
+    jd_kd:
+        name: 快递
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【京豆快递】"
+              timeout-minutes: 350
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_kd.js
+    jd_coupon:
+        name: 源头好物红包
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【源头好物红包】"
+              timeout-minutes: 350
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_coupon.js
+    jd_lottery_machine:
+        name: 抽奖机
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行【新店福利】【闪购盲盒】【疯狂砸金蛋】【健康服务】【东东福利屋】【东东焕新家】"
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/yangtingxiao/jd_lotteryMachine.js
+    jd_nh:
+        name: 年货节
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD年货节】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_nh.js
+    jd_ranking_list:
+        name: 排行榜
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD排行榜】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/yangtingxiao/jd_rankingList.js
+    jd_red_packet:
+        name: 全民抢红包
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD全民抢红包】"
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_redPacket.js
+    jd_shop:
+        name: 进店领豆
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD进店领豆】"
+              timeout-minutes: 350
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_shop.js
+    jd_small_home:
+        name: 东东小窝
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【东东小窝】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_small_home.js
+    jd_syj:
+        name: 十元街
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD十元街】"
+              timeout-minutes: 350
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_syj.js
+    jd_zz:
+        name: 赚赚
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD赚赚】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_jdzz.js
+                  # 独立配置
+                  JDZZ_SHARECODES: ${{ secrets.JDZZ_SHARECODES }} # JD赚赚互助码,,同一个JD账号的好友互助码用@隔开,不同JD账号互助码用&或者换行隔开
+    jx_sign:
+        name: 京喜每日签到
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【京喜每日签到】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jx_sign.js
+    shylocks_jd_mh:
+        name: 盲盒
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD盲盒】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_mh.js
+    shylocks_jd_ms:
+        name: 秒秒币
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD秒秒币】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_ms.js
+    jd_festival:
+        name: 手机年终奖
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【手机年终奖】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_festival.js
+    jd_super_box:
+        name: 超级盒子
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【超级盒子】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_super_box.js

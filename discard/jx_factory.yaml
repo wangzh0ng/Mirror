@@ -1,0 +1,58 @@
+name: 京喜工厂
+
+on:
+    workflow_dispatch:
+    # schedule:
+    #     - cron: "0 */1 * * *"
+    # watch:
+    #     types: [started]
+    repository_dispatch:
+        types: jx_factory
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: Use Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12.x"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行【京喜工厂】"
+              run: |
+                  node source_of_happiness.js
+              env:
+                  # 推送专用
+                  PUSH_KEY: ${{ secrets.PUSH_KEY }}
+                  BARK_PUSH: ${{ secrets.BARK_PUSH }}
+                  BARK_SOUND: ${{ secrets.BARK_SOUND }}
+                  TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+                  TG_USER_ID: ${{ secrets.TG_USER_ID }}
+                  DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN }}
+                  DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET }}
+                  IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY }}
+                  QQ_SKEY: ${{ secrets.QQ_SKEY }}
+                  QQ_MODE: ${{ secrets.QQ_MODE }}
+                  QYWX_KEY: ${{ secrets.QYWX_KEY }}
+                  QYWX_AM: ${{ secrets.QYWX_AM }}
+                  PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
+                  PUSH_PLUS_USER: ${{ secrets.PUSH_PLUS_USER }}
+                  # 安全配置
+                  CORE_URL: ${{ secrets.CORE_URL }}
+                  AES_IV: ${{ secrets.AES_IV }}
+                  AES_KEY: ${{ secrets.AES_KEY }}
+                  EXTEND_URL: ${{ secrets.EXTEND_URL }}
+                  # 通用配置
+                  JD_COOKIE: ${{ secrets.JD_COOKIE }}
+                  JD_USER_AGENT: ${{ secrets.JD_USER_AGENT }}
+                  JD_DEBUG: ${{ secrets.JD_DEBUG }}
+                  SYNC_URL: ./data/jd_scripts/jd_dreamFactory.js
+                  #独立配置
+                  DREAM_FACTORY_SHARE_CODES: ${{ secrets.DREAM_FACTORY_SHARE_CODES }} # 京喜工厂互助码
+                  # 额外配置
+                  SMART_REPLACE: ${{ secrets.SMART_REPLACE }} # 通用替换规则,支持文字替换和正则替换,数据会进行base64解密后使用,[{"match":"要替换的内容",replace:"替换后的内容","desc":"方便自己查看的内容描述","condition":"替换的前提条件,没有就不要填"}]

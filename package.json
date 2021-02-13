@@ -1,0 +1,35 @@
+{
+    "name": "source_of_happiness",
+    "version": "1.0.0",
+    "description": "",
+    "main": "source_of_happiness.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "keywords": [
+        "sign"
+    ],
+    "author": "sazs",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com"
+    },
+    "homepage": "",
+    "dependencies": {
+        "axios": "0.21.1",
+        "download": "^8.0.0",
+        "got": "^11.5.1",
+        "request": "^2.88.2",
+        "http-server": "^0.12.3",
+        "crypto-js": "^4.0.0",
+        "qrcode-terminal": "^0.12.0",
+        "tough-cookie": "^4.0.0",
+        "tunnel": "0.0.6",
+        "js-base64": "^3.6.0",
+        "terser": "5.5.1"
+    }
+}
