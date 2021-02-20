@@ -558,4 +558,3 @@ jobs:
                   node source_of_happiness.js
               env:
                   SYNC_URL: ./data/jd_scripts/jd_speed_sign.js
-    jd_super_box:
