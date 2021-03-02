@@ -1,4 +1,4 @@
-name: SONE_POINT
+name: NECKLACE
 
 on:
     workflow_dispatch:
