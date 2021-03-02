@@ -258,26 +258,6 @@ jobs:
                   node source_of_happiness.js
               env:
                   SYNC_URL: ./data/jd_scripts/jd_kd.js
-    jd_coupon:
-        name: 源头好物红包
-        runs-on: ubuntu-latest
-        if: github.event.repository.owner.id == github.event.sender.id
-        steps:
-            - name: 拉取代码
-              uses: actions/checkout@v2
-            - name: 设置运行环境-Node.js 12
-              uses: actions/setup-node@v2
-              with:
-                  node-version: "12"
-            - name: 安装依赖包
-              run: |
-                  npm install
-            - name: "运行 【源头好物红包】"
-              timeout-minutes: 350
-              run: |
-                  node source_of_happiness.js
-              env:
-                  SYNC_URL: ./data/jd_scripts/jd_coupon.js
     jd_lottery_machine:
         name: 抽奖机
         runs-on: ubuntu-latest
@@ -297,26 +277,6 @@ jobs:
                   node source_of_happiness.js
               env:
                   SYNC_URL: ./data/yangtingxiao/jd_lotteryMachine.js
-    jd_nh:
-        name: 年货节
-        runs-on: ubuntu-latest
-        if: github.event.repository.owner.id == github.event.sender.id
-        steps:
-            - name: 拉取代码
-              uses: actions/checkout@v2
-            - name: 设置运行环境-Node.js 12
-              uses: actions/setup-node@v2
-              with:
-                  node-version: "12"
-            - name: 安装依赖包
-              run: |
-                  npm install
-            - name: "运行 【JD年货节】"
-              timeout-minutes: 30
-              run: |
-                  node source_of_happiness.js
-              env:
-                  SYNC_URL: ./data/jd_scripts/jd_nh.js
     jd_ranking_list:
         name: 排行榜
         runs-on: ubuntu-latest
@@ -438,46 +398,6 @@ jobs:
                   SYNC_URL: ./data/jd_scripts/jd_jdzz.js
                   # 独立配置
                   JDZZ_SHARECODES: ${{ secrets.JDZZ_SHARECODES }} # JD赚赚互助码,,同一个JD账号的好友互助码用@隔开,不同JD账号互助码用&或者换行隔开
-    jx_sign:
-        name: 京喜每日签到
-        runs-on: ubuntu-latest
-        if: github.event.repository.owner.id == github.event.sender.id
-        steps:
-            - name: 拉取代码
-              uses: actions/checkout@v2
-            - name: 设置运行环境-Node.js 12
-              uses: actions/setup-node@v2
-              with:
-                  node-version: "12"
-            - name: 安装依赖包
-              run: |
-                  npm install
-            - name: "运行 【京喜每日签到】"
-              timeout-minutes: 30
-              run: |
-                  node source_of_happiness.js
-              env:
-                  SYNC_URL: ./data/jd_scripts/jx_sign.js
-    shylocks_jd_mh:
-        name: 盲盒
-        runs-on: ubuntu-latest
-        if: github.event.repository.owner.id == github.event.sender.id
-        steps:
-            - name: 拉取代码
-              uses: actions/checkout@v2
-            - name: 设置运行环境-Node.js 12
-              uses: actions/setup-node@v2
-              with:
-                  node-version: "12"
-            - name: 安装依赖包
-              run: |
-                  npm install
-            - name: "运行 【JD盲盒】"
-              timeout-minutes: 30
-              run: |
-                  node source_of_happiness.js
-              env:
-                  SYNC_URL: ./data/jd_scripts/jd_mh.js
     shylocks_jd_ms:
         name: 秒秒币
         runs-on: ubuntu-latest
@@ -498,43 +418,3 @@ jobs:
                   node source_of_happiness.js
               env:
                   SYNC_URL: ./data/jd_scripts/jd_ms.js
-    jd_festival:
-        name: 手机年终奖
-        runs-on: ubuntu-latest
-        if: github.event.repository.owner.id == github.event.sender.id
-        steps:
-            - name: 拉取代码
-              uses: actions/checkout@v2
-            - name: 设置运行环境-Node.js 12
-              uses: actions/setup-node@v2
-              with:
-                  node-version: "12"
-            - name: 安装依赖包
-              run: |
-                  npm install
-            - name: "运行 【手机年终奖】"
-              timeout-minutes: 30
-              run: |
-                  node source_of_happiness.js
-              env:
-                  SYNC_URL: ./data/jd_scripts/jd_festival.js
-    jd_super_box:
-        name: 超级盒子
-        runs-on: ubuntu-latest
-        if: github.event.repository.owner.id == github.event.sender.id
-        steps:
-            - name: 拉取代码
-              uses: actions/checkout@v2
-            - name: 设置运行环境-Node.js 12
-              uses: actions/setup-node@v2
-              with:
-                  node-version: "12"
-            - name: 安装依赖包
-              run: |
-                  npm install
-            - name: "运行 【超级盒子】"
-              timeout-minutes: 30
-              run: |
-                  node source_of_happiness.js
-              env:
-                  SYNC_URL: ./data/jd_scripts/jd_super_box.js
