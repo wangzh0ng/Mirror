@@ -1,4 +1,4 @@
-name: REPO_SYNC
+name: AA_REPO_SYNC
 
 on:
     workflow_dispatch:
