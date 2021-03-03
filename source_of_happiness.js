@@ -162,7 +162,7 @@ async function download(downloadConfig) {
                                 headers: {
                                     "User-Agent":
                                         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36",
-                                    "Accept-Encoding": "gzip", // 使用gzip压缩让数据传输更快
+                                    // "Accept-Encoding": "gzip", // 使用gzip压缩让数据传输更快
                                 },
                             },
                             function (error, response, body) {
@@ -176,7 +176,7 @@ async function download(downloadConfig) {
             }
         }
         if (!fcontent) {
-            console.log(`❌📥 ${typeDes}${tip_name}时未获取到对应数据`, error);
+            console.log(`❌📥 ${typeDes}${tip_name}时未获取到对应数据`);
             return;
         }
 
