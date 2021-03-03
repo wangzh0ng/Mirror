@@ -2,6 +2,7 @@ const exec = require("child_process").execSync;
 const fs = require("fs");
 const axios = require("axios");
 const aes = require("./javascript/aes");
+const request = require("request");
 //const hot = require("./javascript/hot_require_module");
 
 !(async () => {
@@ -131,9 +132,10 @@ async function downloadForMe(fileConfigList) {
  * @param {String} type 资源类型(remote-远程 local-本地)
  * @param {String} tip_name 提示时的文件别名
  * @param {Boolean} decrypt 是否需要进行解密
+ * @param {String} proxy 代理路径,不填则不走代理,如http://127.0.0.1:7890
  */
 async function download(downloadConfig) {
-    let { url, path, type, tip_name, decrypt } = downloadConfig;
+    let { url, path, type, tip_name, decrypt, proxy } = downloadConfig;
     let typeDes = type == "local" ? "加载" : "下载";
     let fcontent = "";
     tip_name = tip_name || "";
@@ -149,8 +151,29 @@ async function download(downloadConfig) {
         if (type == "local") {
             fcontent = await fs.readFileSync(url, "utf-8");
         } else {
-            let response = await axios.get(url);
-            fcontent = response.data;
+            if (proxy) {
+                fcontent = await (() => {
+                    return new Promise((resolve) => {
+                        request(
+                            {
+                                url: url,
+                                method: "GET",
+                                proxy: proxy,
+                                headers: {
+                                    "User-Agent":
+                                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36",
+                                    "Accept-Encoding": "gzip", // 使用gzip压缩让数据传输更快
+                                },
+                            },
+                            function (error, response, body) {
+                                resolve(body);
+                            }
+                        );
+                    });
+                })();
+            } else {
+                fcontent = await axios.get(url).data;
+            }
         }
         if (!fcontent) {
             console.log(`❌📥 ${typeDes}${tip_name}时未获取到对应数据`, error);
