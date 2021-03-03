@@ -4,26 +4,37 @@ var path = require("path");
 const axios = require("axios");
 const request = require("request");
 
+var gallerys = [
+    {
+        url: "https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/box/yangtingxiao.gallery.json",
+        path: "./yangtingxiao/gallery.json",
+        type: "remote",
+        tip_name: "yangtingxiao_Gallery",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
+    {
+        url: "https://jdsharedresourcescdn.azureedge.net/jdresource/lxk0301_gallery.json",
+        path: "./jd_scripts/gallery.json",
+        type: "remote",
+        tip_name: "lxk0301_Gallery",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
+];
+var predownloads = [
+    {
+        url: "https://github.com/Zero-S1/xmly_speed/raw/master/xmly_speed.py",
+        path: "./Zero-S1/xmly_speed.py",
+        type: "remote",
+        tip_name: "xmly_speed.py",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
+];
+
 !(async () => {
     console.log(`北京时间 (UTC+08)：${new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toLocaleString()}\n`);
-    var gallerys = [
-        {
-            url: "https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/box/yangtingxiao.gallery.json",
-            path: "./yangtingxiao/gallery.json",
-            type: "remote",
-            tip_name: "yangtingxiao_Gallery",
-            decrypt: false,
-            proxy: "http://127.0.0.1:7890",
-        },
-        {
-            url: "https://jdsharedresourcescdn.azureedge.net/jdresource/lxk0301_gallery.json",
-            path: "./jd_scripts/gallery.json",
-            type: "remote",
-            tip_name: "lxk0301_Gallery",
-            decrypt: false,
-            proxy: "http://127.0.0.1:7890",
-        },
-    ];
 
     let regex = /\s(https?:\/\/[\d\D]+?),\stag=/;
     for (const gallery of gallerys) {
@@ -51,6 +62,9 @@ const request = require("request");
         } catch (e) {
             console.log("🔴 执行异常:" + e);
         }
+    }
+    for (const predownload of predownloads) {
+        await download(predownload);
     }
 })()
     .catch((e) => {
