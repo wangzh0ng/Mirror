@@ -1,10 +1,11 @@
 /* 用于同步并加密文件 */
 const fs = require("fs");
-var path = require("path");
+const path = require("path");
 const axios = require("axios");
 const request = require("request");
 
-var gallerys = [
+let galleryRegex = /\s(https?:\/\/[\d\D]+?),\stag=/;
+let gallerys = [
     {
         url: "https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/box/yangtingxiao.gallery.json",
         path: "./yangtingxiao/gallery.json",
@@ -22,7 +23,7 @@ var gallerys = [
         proxy: "http://127.0.0.1:7890",
     },
 ];
-var predownloads = [
+let predownloads = [
     {
         url: "https://github.com/Zero-S1/xmly_speed/raw/master/xmly_speed.py",
         path: "./Zero-S1/xmly_speed.py",
@@ -36,17 +37,15 @@ var predownloads = [
 !(async () => {
     console.log(`北京时间 (UTC+08)：${new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toLocaleString()}\n`);
 
-    let regex = /\s(https?:\/\/[\d\D]+?),\stag=/;
     for (const gallery of gallerys) {
         try {
             await download(gallery);
             let galleryConfig = fs.readFileSync(gallery.path, "utf-8");
-            // console.log(galleryConfig)
             let tasks = JSON.parse(galleryConfig).task;
             for (var task of tasks) {
                 if (typeof task == "object") task = task.config;
-                if (regex.test(task)) {
-                    var link = task.match(regex)[1];
+                if (galleryRegex.test(task)) {
+                    var link = task.match(galleryRegex)[1];
                     var fileName = link.substring(link.lastIndexOf("/"));
                     var target = gallery.path.replace("gallery.json", fileName);
                     await download({
@@ -66,6 +65,7 @@ var predownloads = [
     for (const predownload of predownloads) {
         await download(predownload);
     }
+    console.log("\n下载完毕,当前目录列表为\n", await collectFiles("./", true));
 })()
     .catch((e) => {
         console.log(`❌ 执行失败! 原因: ${e}!`);
@@ -73,14 +73,16 @@ var predownloads = [
     .finally(() => {
         console.log("🥳 脚本执行完毕");
     });
+
 /**
  * 收集文件
  * @param {String} relativePath 路径
+ * @param {Boolean} findAll 发现全部
  * @param {Regex} include 匹配的正则
  */
-async function collectFiles(relativePath, include) {
+async function collectFiles(relativePath, findAll, include) {
     let fileList = [];
-    return listFile(relativePath, fileList, false, include);
+    return listFile(relativePath, fileList, findAll, include);
 }
 /**
  * 列出文件
@@ -100,7 +102,7 @@ function listFile(dir, list = [], findAll = false, include = null) {
             if (!include || include.test(fullpath)) list.push(fullpath);
         }
     });
-    console.log(list);
+    // console.log(list);
     return list;
 }
 
