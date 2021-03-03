@@ -125,8 +125,7 @@ async function downloadForMe(fileConfigList) {
 
 //#region 帮助方法
 
-/**
- * 下载文件
+/** 下载文件
  * @param {String} url 下载地址
  * @param {String} path 存放路径
  * @param {String} type 资源类型(remote-远程 local-本地)
@@ -192,8 +191,7 @@ async function download(downloadConfig) {
         console.log(`❌📥 ${typeDes}${tip_name}时出错`, error);
     }
 }
-/**
- * 生成随机数字
+/** 生成随机数字
  * @param {number} min 最小值（包含）
  * @param {number} max 最大值（不包含）
  */

@@ -23,7 +23,7 @@ let gallerys = [
         proxy: "http://127.0.0.1:7890",
     },
 ];
-let predownloads = [
+let singleDownloads = [
     {
         url: "https://github.com/Zero-S1/xmly_speed/raw/master/xmly_speed.py",
         path: "./Zero-S1/xmly_speed.py",
@@ -62,8 +62,8 @@ let predownloads = [
             console.log("🔴 执行异常:" + e);
         }
     }
-    for (const predownload of predownloads) {
-        await download(predownload);
+    for (const singleDownload of singleDownloads) {
+        await download(singleDownload);
     }
     console.log("\n下载完毕,当前目录列表为\n", await collectFiles("./", true));
 })()
@@ -74,8 +74,7 @@ let predownloads = [
         console.log("🥳 脚本执行完毕");
     });
 
-/**
- * 收集文件
+/** 收集文件
  * @param {String} relativePath 路径
  * @param {Boolean} findAll 发现全部
  * @param {Regex} include 匹配的正则
@@ -84,8 +83,7 @@ async function collectFiles(relativePath, findAll, include) {
     let fileList = [];
     return listFile(relativePath, fileList, findAll, include);
 }
-/**
- * 列出文件
+/** 列出文件
  * @param {String} dir 路径
  * @param {Array} list 传参
  * @param {Boolean} findAll 发现全部
@@ -106,8 +104,7 @@ function listFile(dir, list = [], findAll = false, include = null) {
     return list;
 }
 
-/**
- * 下载文件
+/** 下载文件
  * @param {String} url 下载地址
  * @param {String} path 存放路径
  * @param {String} type 资源类型(remote-远程 local-本地)
