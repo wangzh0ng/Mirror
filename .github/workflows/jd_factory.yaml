@@ -1,4 +1,4 @@
-name: 东东工厂
+name: FACTORY
 
 on:
     workflow_dispatch:

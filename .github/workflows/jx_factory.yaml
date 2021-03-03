@@ -1,13 +1,13 @@
-name: 京喜农场
+name: FACTORY_JX
 
 on:
     workflow_dispatch:
-    # schedule:
-    #     - cron: "5 1,10 * * *"
-    # watch:
-    #     types: [started]
+    schedule:
+        - cron: "0 */1 * * *"
+    watch:
+        types: [started]
     repository_dispatch:
-        types: jx_nc
+        types: jx_factory
 
 jobs:
     build:
@@ -23,8 +23,7 @@ jobs:
             - name: 安装依赖包
               run: |
                   npm install
-            - name: "运行【京喜农场】"
-              timeout-minutes: 30
+            - name: "运行【京喜工厂】"
               run: |
                   node source_of_happiness.js
               env:
@@ -43,19 +42,17 @@ jobs:
                   QYWX_AM: ${{ secrets.QYWX_AM }}
                   PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
                   PUSH_PLUS_USER: ${{ secrets.PUSH_PLUS_USER }}
-                  JD_COOKIE: ${{ secrets.JD_COOKIE }}
                   # 安全配置
                   CORE_URL: ${{ secrets.CORE_URL }}
                   AES_IV: ${{ secrets.AES_IV }}
                   AES_KEY: ${{ secrets.AES_KEY }}
                   EXTEND_URL: ${{ secrets.EXTEND_URL }}
                   # 通用配置
-                  JD_DEBUG: ${{ secrets.JD_DEBUG }}
+                  JD_COOKIE: ${{ secrets.JD_COOKIE }}
                   JD_USER_AGENT: ${{ secrets.JD_USER_AGENT }}
-                  SYNC_URL: ./data/jd_scripts/jd_jxnc.js
-                  #专属配置
-                  JXNC_SHARECODES: ${{ secrets.JXNC_SHARECODES }} # 京喜农场互助码,,同一个JD账号的好友互助码用@隔开,不同JD账号互助码用&或者换行隔开
-                  JXNCTOKENS: ${{ secrets.JXNCTOKENS }} # 每个账号 token 是一个 json，json 需要用单引号包裹，否则设置环境变量时会出错，示例：'{"farm_jstoken":"749a90f871adsfads8ffda7bf3b1576760","timestamp":"1610165423873","phoneid":"42c7e3dadfadsfdsaac-18f0e4f4a0cf"}'，多账单间使用`&`或换行分开。
-                  IGNORE_COOKIE_JXNC: ${{ secrets.IGNORE_COOKIE_JXNC }} #京喜农场禁用某些cookie的执行,因为通知太烦了呀,比如要禁用第2和第四个的执行,则填入[2,4]即可,包含中括号哦
+                  JD_DEBUG: ${{ secrets.JD_DEBUG }}
+                  SYNC_URL: ./data/jd_scripts/jd_dreamFactory.js
+                  #独立配置
+                  DREAM_FACTORY_SHARE_CODES: ${{ secrets.DREAM_FACTORY_SHARE_CODES }} # 京喜工厂互助码
                   # 额外配置
                   SMART_REPLACE: ${{ secrets.SMART_REPLACE }} # 通用替换规则,支持文字替换和正则替换,数据会进行base64解密后使用,[{"match":"要替换的内容",replace:"替换后的内容","desc":"方便自己查看的内容描述","condition":"替换的前提条件,没有就不要填"}]

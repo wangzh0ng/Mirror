@@ -1,16 +1,16 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: 小鸽有礼-0209结束
+name: MONEY_TREE
 
 on:
     workflow_dispatch:
     schedule:
-        - cron: "5 7 * * *"
+        - cron: "20 */3 * * *"
     watch:
         types: [started]
     repository_dispatch:
-        types: jd_xg
+        types: jd_moneyTree
 
 jobs:
     build:
@@ -26,7 +26,7 @@ jobs:
             - name: 安装依赖包
               run: |
                   npm install
-            - name: "运行 【小鸽有礼】"
+            - name: "运行 【JD摇钱树】"
               run: |
                   node source_of_happiness.js
               env:
@@ -54,6 +54,8 @@ jobs:
                   JD_COOKIE: ${{ secrets.JD_COOKIE }}
                   JD_USER_AGENT: ${{ secrets.JD_USER_AGENT }}
                   JD_DEBUG: ${{ secrets.JD_DEBUG }}
-                  SYNC_URL: ./data/jd_scripts/jd_xg.js
+                  SYNC_URL: ./data/jd_scripts/jd_moneyTree.js
+                  #独立配置
+                  MONEY_TREE_SELL_FRUIT: ${{ secrets.MONEY_TREE_SELL_FRUIT }} # 控制摇钱树脚本是否自动卖出金果兑换成金币，true卖出，false不卖出，默认false
                   # 额外配置
                   SMART_REPLACE: ${{ secrets.SMART_REPLACE }} # 通用替换规则,支持文字替换和正则替换,数据会进行base64解密后使用,[{"match":"要替换的内容",replace:"替换后的内容","desc":"方便自己查看的内容描述","condition":"替换的前提条件,没有就不要填"}]
