@@ -32,6 +32,22 @@ let boxjses = [
         decrypt: false,
         proxy: "http://127.0.0.1:7890",
     },
+    {
+        url: "https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.json",
+        path: "./chavy/boxjs.json",
+        type: "remote",
+        tip_name: "chavy_BoxJs",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
+    {
+        url: "https://raw.githubusercontent.com/zZPiglet/Task/master/zZPiglet.boxjs.json",
+        path: "./zZPiglet/boxjs.json",
+        type: "remote",
+        tip_name: "zZPiglet_BoxJs",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
 ];
 let singleDownloads = [
     {
@@ -64,7 +80,7 @@ let singleDownloads = [
     for (const singleDownload of singleDownloads) {
         await download(singleDownload);
     }
-    console.log("\n下载完毕,当前目录列表为\n", await collectFiles("./", true));
+    // console.log("\n下载完毕,当前目录列表为\n", await collectFiles("./", true));
 })()
     .catch((e) => {
         console.log(`❌ 执行失败! 原因: ${e}!`);
@@ -96,23 +112,66 @@ async function getFromGallery(gallery) {
 }
 async function getFromBoxjs(boxjs) {
     await download(boxjs);
-    let boxjsConfig = fs.readFileSync(boxjs.path, "utf-8");
-    let tasks = JSON.parse(boxjsConfig).task;
-    for (var task of tasks) {
-        if (typeof task == "object") task = task.config;
-        if (quantumultx_task_regex.test(task)) {
-            var link = task.match(quantumultx_task_regex)[1];
-            var fileName = link.substring(link.lastIndexOf("/"));
-            var target = boxjs.path.replace("boxjs.json", fileName);
-            await download({
-                url: link,
-                path: target,
-                type: "remote",
-                tip_name: fileName,
-                decrypt: false,
-                proxy: boxjs.proxy,
-            });
+    var downloadList = [];
+    let boxjsConfig = JSON.parse(fs.readFileSync(boxjs.path, "utf-8"));
+    if (boxjsConfig.task && boxjsConfig.task.length > 0) {
+        for (var task of boxjsConfig.task) {
+            if (typeof task == "object") task = task.config;
+            if (quantumultx_task_regex.test(task)) {
+                var link = task.match(quantumultx_task_regex)[1];
+                var fileName = link.substring(link.lastIndexOf("/"));
+                var target = boxjs.path.replace("boxjs.json", fileName);
+                downloadList.push({
+                    url: link,
+                    path: target,
+                    type: "remote",
+                    tip_name: fileName,
+                    decrypt: false,
+                    proxy: boxjs.proxy,
+                });
+            }
         }
+    }
+    if (boxjsConfig.apps && boxjsConfig.apps.length > 0) {
+        for (var app of boxjsConfig.apps) {
+            if (app.scripts && app.scripts.length > 0) {
+                for (var script of app.scripts) {
+                    if (typeof script == "object") {
+                        script = script.script;
+                    }
+                    if (!script) continue;
+                    var fileName = script.substring(script.lastIndexOf("/"));
+                    var target = boxjs.path.replace("boxjs.json", fileName);
+                    if (downloadList.filter((it) => it.url == script).length <= 0) {
+                        downloadList.push({
+                            url: script,
+                            path: target,
+                            type: "remote",
+                            tip_name: fileName,
+                            decrypt: false,
+                            proxy: boxjs.proxy,
+                        });
+                    }
+                }
+            } else if (app.script) {
+                var script = app.script;
+                var fileName = script.substring(script.lastIndexOf("/"));
+                var target = boxjs.path.replace("boxjs.json", fileName);
+                if (downloadList.filter((it) => it.url == script).length <= 0) {
+                    downloadList.push({
+                        url: script,
+                        path: target,
+                        type: "remote",
+                        tip_name: fileName,
+                        decrypt: false,
+                        proxy: boxjs.proxy,
+                    });
+                }
+            }
+        }
+    }
+    for (var downloadConfig of downloadList) {
+        await download(downloadConfig);
     }
 }
 
@@ -155,7 +214,7 @@ function listFile(dir, list = [], findAll = false, include = null) {
  * @param {String} proxy 代理路径,不填则不走代理,如http://127.0.0.1:7890
  */
 async function download(downloadConfig) {
-    let { url, path, type, tip_name, decrypt, proxy } = downloadConfig;
+    let { url, path: filePath, type, tip_name, decrypt, proxy } = downloadConfig;
     let typeDes = type == "local" ? "加载" : "下载";
     let fcontent = "";
     tip_name = tip_name || "";
@@ -163,7 +222,7 @@ async function download(downloadConfig) {
         console.log(`❌📥 【${typeDes}】${tip_name}时链接丢失`);
         return;
     }
-    if (!path) {
+    if (!filePath) {
         console.log(`❌📥 【${typeDes}】${tip_name}时存放路径丢失`);
         return;
     }
@@ -199,13 +258,16 @@ async function download(downloadConfig) {
             console.log(`❌📥 【${typeDes}】${tip_name}时未获取到对应数据`);
             return;
         }
-
+        var tmp = path.dirname(filePath);
+        if (!fs.existsSync(tmp)) {
+            fs.mkdirSync(tmp);
+        }
         if (decrypt) {
             fcontent = aes.decrypt(fcontent, process.env.AES_KEY, process.env.AES_IV);
-            await fs.writeFileSync(path, fcontent, "utf8");
+            await fs.writeFileSync(filePath, fcontent, "utf8");
             console.log(`📥🔓 【${typeDes}】${tip_name}并解密完毕`);
         } else {
-            await fs.writeFileSync(path, fcontent, "utf8");
+            await fs.writeFileSync(filePath, fcontent, "utf8");
             console.log(`📥 【${typeDes}】${tip_name}完毕`);
         }
     } catch (error) {
