@@ -418,3 +418,23 @@ jobs:
                   node source_of_happiness.js
               env:
                   SYNC_URL: ./data/jd_scripts/jd_ms.js
+    jd_sgmh:
+        name: 闪购魔盒
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD秒秒币】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_sgmh.js
