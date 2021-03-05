@@ -4,7 +4,7 @@ const path = require("path");
 const axios = require("axios");
 const request = require("request");
 
-let galleryRegex = /\s(https?:\/\/[\d\D]+?),\stag=/;
+let quantumultx_task_regex = /\s(https?:\/\/[\d\D]+?),\stag=/;
 let gallerys = [
     {
         url: "https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/box/yangtingxiao.gallery.json",
@@ -19,6 +19,16 @@ let gallerys = [
         path: "./jd_scripts/gallery.json",
         type: "remote",
         tip_name: "lxk0301_Gallery",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
+];
+let boxjses = [
+    {
+        url: "https://raw.githubusercontent.com/NobyDa/Script/master/NobyDa_BoxJs.json",
+        path: "./NobyDa/boxjs.json",
+        type: "remote",
+        tip_name: "NobyDa_BoxJs",
         decrypt: false,
         proxy: "http://127.0.0.1:7890",
     },
@@ -39,25 +49,14 @@ let singleDownloads = [
 
     for (const gallery of gallerys) {
         try {
-            await download(gallery);
-            let galleryConfig = fs.readFileSync(gallery.path, "utf-8");
-            let tasks = JSON.parse(galleryConfig).task;
-            for (var task of tasks) {
-                if (typeof task == "object") task = task.config;
-                if (galleryRegex.test(task)) {
-                    var link = task.match(galleryRegex)[1];
-                    var fileName = link.substring(link.lastIndexOf("/"));
-                    var target = gallery.path.replace("gallery.json", fileName);
-                    await download({
-                        url: link,
-                        path: target,
-                        type: "remote",
-                        tip_name: fileName,
-                        decrypt: false,
-                        proxy: gallery.proxy,
-                    });
-                }
-            }
+            await getFromGallery(gallery);
+        } catch (e) {
+            console.log("🔴 执行异常:" + e);
+        }
+    }
+    for (const boxjs of boxjses) {
+        try {
+            await getFromBoxjs(boxjs);
         } catch (e) {
             console.log("🔴 执行异常:" + e);
         }
@@ -73,6 +72,49 @@ let singleDownloads = [
     .finally(() => {
         console.log("🥳 脚本执行完毕");
     });
+
+async function getFromGallery(gallery) {
+    await download(gallery);
+    let galleryConfig = fs.readFileSync(gallery.path, "utf-8");
+    let tasks = JSON.parse(galleryConfig).task;
+    for (var task of tasks) {
+        if (typeof task == "object") task = task.config;
+        if (quantumultx_task_regex.test(task)) {
+            var link = task.match(quantumultx_task_regex)[1];
+            var fileName = link.substring(link.lastIndexOf("/"));
+            var target = gallery.path.replace("gallery.json", fileName);
+            await download({
+                url: link,
+                path: target,
+                type: "remote",
+                tip_name: fileName,
+                decrypt: false,
+                proxy: gallery.proxy,
+            });
+        }
+    }
+}
+async function getFromBoxjs(boxjs) {
+    await download(boxjs);
+    let boxjsConfig = fs.readFileSync(boxjs.path, "utf-8");
+    let tasks = JSON.parse(boxjsConfig).task;
+    for (var task of tasks) {
+        if (typeof task == "object") task = task.config;
+        if (quantumultx_task_regex.test(task)) {
+            var link = task.match(quantumultx_task_regex)[1];
+            var fileName = link.substring(link.lastIndexOf("/"));
+            var target = boxjs.path.replace("boxjs.json", fileName);
+            await download({
+                url: link,
+                path: target,
+                type: "remote",
+                tip_name: fileName,
+                decrypt: false,
+                proxy: boxjs.proxy,
+            });
+        }
+    }
+}
 
 /** 收集文件
  * @param {String} relativePath 路径
