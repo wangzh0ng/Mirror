@@ -20,11 +20,19 @@ const request = require("request");
         }
         console.log(`🟢 准备核心文件中...`);
         await prepareFiles();
-        //let coreJs = hot.require("./core.js");
-        let coreJs = require("./core.js");
-        console.log(`🟢 注入文件中...`);
-        let content = await fs.readFileSync("./base.js", "utf-8");
-        let sweet_heart = await coreJs.inject(content);
+        let sweet_heart = "";
+        if (process.env.MODE_QX) {
+            let qx2node = await fs.readFileSync("./qx2node.js", "utf-8");
+            let content = await fs.readFileSync("./base.js", "utf-8");
+            sweet_heart = `${qx2node}
+${content}`;
+        } else {
+            //let coreJs = hot.require("./core.js");
+            let coreJs = require("./core.js");
+            console.log(`🟢 注入文件中...`);
+            let content = await fs.readFileSync("./base.js", "utf-8");
+            sweet_heart = await coreJs.inject(content);
+        }
 
         await fs.writeFileSync("./happy.js", sweet_heart, "utf8");
         console.log(`🟢 开始执行中...`);
@@ -75,6 +83,15 @@ async function checkEnv() {
 /** 准备下载文件,如果有加密的文件,则在此时进行解密 */
 async function prepareFiles() {
     try {
+        if (process.env.MODE_QX) {
+            await download({
+                url: "./data/qx2node_encrypt.h",
+                path: "./qx2node.js",
+                tip_name: "转换QX文件至支持NODE运行的模式",
+                type: "local",
+                decrypt: false,
+            });
+        }
         if (process.env.SYNC_URL) {
             if (/(https:\/\/)|(http:\/\/)/.test(process.env.SYNC_URL)) {
                 await download({
