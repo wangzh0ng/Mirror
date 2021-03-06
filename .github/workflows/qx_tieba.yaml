@@ -39,4 +39,4 @@ jobs:
                   MODE_QX: TieBa
                   # 独立配置
                   TieBa_CookieTB: ${{ secrets.TieBa_CookieTB }}
-                  SMART_REPLACE: W3sibWF0Y2giOiJ2YXIgcHJvY2VzcyA9IixyZXBsYWNlOiIkbm9ieWRhLnByb2Nlc3MiLCJkZXNjIjoicHJvY2Vzc+WjsOaYjiIsImNvbmRpdGlvbiI6IiJ9LHsibWF0Y2giOi9wcm9jZXNzLnRvdGFsL2cscmVwbGFjZToiJG5vYnlkYS5wcm9jZXNzLnRvdGFsIiwiZGVzYyI6InByb2Nlc3MudG90YWzlo7DmmI4iLCJjb25kaXRpb24iOiIifSwseyJtYXRjaCI6L3Byb2Nlc3MucmVzdWx0L2cscmVwbGFjZToiJG5vYnlkYS5wcm9jZXNzLnJlc3VsdCIsImRlc2MiOiJwcm9jZXNzLnJlc3VsdOWjsOaYjiIsImNvbmRpdGlvbiI6IiJ9XQ==
+                  SMART_REPLACE: W3sibWF0Y2giOiJ2YXIgcHJvY2VzcyA9IiwicmVwbGFjZSI6IiRub2J5ZGEucHJvY2VzcyA9IiwiZGVzYyI6InByb2Nlc3Plo7DmmI4iLCJjb25kaXRpb24iOiIifSx7Im1hdGNoIjoicHJvY2Vzcy50b3RhbCIsInJlcGxhY2UiOiIkbm9ieWRhLnByb2Nlc3MudG90YWwiLCJkZXNjIjoicHJvY2Vzcy50b3RhbOWjsOaYjiIsImNvbmRpdGlvbiI6IiJ9LHsibWF0Y2giOiJwcm9jZXNzLnJlc3VsdCIsInJlcGxhY2UiOiIkbm9ieWRhLnByb2Nlc3MucmVzdWx0IiwiZGVzYyI6InByb2Nlc3MucmVzdWx05aOw5piOIiwiY29uZGl0aW9uIjoiIn1d
