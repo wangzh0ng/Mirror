@@ -4,7 +4,8 @@
     "description": "",
     "main": "source_of_happiness.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dotenv": "node -r dotenv/config"
     },
     "repository": {
         "type": "git",
@@ -31,6 +32,7 @@
         "tunnel": "0.0.6",
         "js-base64": "^3.6.0",
         "terser": "5.5.1",
-        "ws": "^7.4.3"
+        "ws": "^7.4.3",
+        "dotenv": "^8.2.0"
     }
 }

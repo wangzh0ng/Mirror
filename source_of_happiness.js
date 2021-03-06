@@ -1,5 +1,6 @@
 const exec = require("child_process").execSync;
 const fs = require("fs");
+const path = require("path");
 const axios = require("axios");
 const aes = require("./javascript/aes");
 const request = require("request");
@@ -82,16 +83,8 @@ async function checkEnv() {
 }
 /** 准备下载文件,如果有加密的文件,则在此时进行解密 */
 async function prepareFiles() {
+    //#region SYNC_URL
     try {
-        if (process.env.MODE_QX) {
-            await download({
-                url: "./data/qx2node_encrypt.h",
-                path: "./qx2node.js",
-                tip_name: "转换QX文件至支持NODE运行的模式",
-                type: "local",
-                decrypt: false,
-            });
-        }
         if (process.env.SYNC_URL) {
             if (/(https:\/\/)|(http:\/\/)/.test(process.env.SYNC_URL)) {
                 await download({
@@ -111,22 +104,35 @@ async function prepareFiles() {
             }
         }
     } catch (error) {
-        console.log("❌📥 下载文件时报错", error);
+        console.log("❌📥 下载SYNC_URL文件时报错", error);
     }
-    try {
-        if (process.env.CORE_URL) {
-            let coreFiles = JSON.parse(process.env.CORE_URL);
-            await downloadForMe(coreFiles);
-        }
-    } catch (error) {
-        console.log("❌📥 下载文件时报错", error);
+    //#endregion
+    if (process.env.MODE_QX) {
+        await download({
+            url: "./data/qx2node_encrypt.h",
+            path: "./qx2node.js",
+            tip_name: "转换QX文件至支持NODE运行的模式",
+            type: "local",
+            decrypt: true,
+        });
+        await download({
+            url: "./data/sendNotify_encrypt.h",
+            path: "./sendNotify.js",
+            tip_name: "消息推送",
+            type: "local",
+            decrypt: true,
+        });
+    }
+    if (process.env.CORE_URL) {
+        let coreFiles = JSON.parse(process.env.CORE_URL);
+        await downloadForMe(coreFiles);
     }
     try {
         if (!process.env.EXTEND_URL) return;
         let extendFiles = JSON.parse(process.env.EXTEND_URL);
         await downloadForMe(extendFiles);
     } catch (error) {
-        console.log("无额外文件需要注入");
+        console.log("❌📥 下载EXTEND_URL文件时报错", error);
     }
 }
 
@@ -146,21 +152,21 @@ async function downloadForMe(fileConfigList) {
  * @param {String} url 下载地址
  * @param {String} path 存放路径
  * @param {String} type 资源类型(remote-远程 local-本地)
- * @param {String} tip_name 提示时的文件别名
+ * @param {String} tip_name 提示时的文件别名,如果不填则不提示
  * @param {Boolean} decrypt 是否需要进行解密
  * @param {String} proxy 代理路径,不填则不走代理,如http://127.0.0.1:7890
  */
 async function download(downloadConfig) {
-    let { url, path, type, tip_name, decrypt, proxy } = downloadConfig;
+    let { url, path: filePath, type, tip_name, decrypt, proxy } = downloadConfig;
     let typeDes = type == "local" ? "加载" : "下载";
     let fcontent = "";
     tip_name = tip_name || "";
     if (!url) {
-        console.log(`❌📥 ${typeDes}${tip_name}时链接丢失`);
+        console.log(`❌📥 【${typeDes}】${tip_name}时链接丢失`);
         return;
     }
-    if (!path) {
-        console.log(`❌📥 ${typeDes}${path}时存放路径丢失`);
+    if (!filePath) {
+        console.log(`❌📥 【${typeDes}】${tip_name}时存放路径丢失`);
         return;
     }
     try {
@@ -192,20 +198,23 @@ async function download(downloadConfig) {
             }
         }
         if (!fcontent) {
-            console.log(`❌📥 ${typeDes}${tip_name}时未获取到对应数据`);
+            console.log(`❌📥 【${typeDes}】${tip_name}时未获取到对应数据`);
             return;
         }
-
+        var tmp = path.dirname(filePath);
+        if (!fs.existsSync(tmp)) {
+            fs.mkdirSync(tmp);
+        }
         if (decrypt) {
             fcontent = aes.decrypt(fcontent, process.env.AES_KEY, process.env.AES_IV);
-            await fs.writeFileSync(path, fcontent, "utf8");
-            console.log(`📥🔓 ${typeDes}${tip_name}并解密完毕`);
+            await fs.writeFileSync(filePath, fcontent, "utf8");
+            console.log(`📥🔓 【${typeDes}】${tip_name}并解密完毕`);
         } else {
-            await fs.writeFileSync(path, fcontent, "utf8");
-            console.log(`📥 ${typeDes}${tip_name}完毕`);
+            await fs.writeFileSync(filePath, fcontent, "utf8");
+            console.log(`📥 【${typeDes}】${tip_name}完毕`);
         }
     } catch (error) {
-        console.log(`❌📥 ${typeDes}${tip_name}时出错`, error);
+        console.log(`❌📥 【${typeDes}】${tip_name}时出错`, error);
     }
 }
 /** 生成随机数字
