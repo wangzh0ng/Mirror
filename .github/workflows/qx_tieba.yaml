@@ -31,6 +31,7 @@ jobs:
                   node source_of_happiness.js
               env:
                   # 安全配置
+                  CORE_URL: ${{ secrets.CORE_URL }}
                   AES_IV: ${{ secrets.AES_IV }}
                   AES_KEY: ${{ secrets.AES_KEY }}
                   # 通用配置
@@ -38,3 +39,4 @@ jobs:
                   MODE_QX: TieBa
                   # 独立配置
                   TieBa_CookieTB: ${{ secrets.TieBa_CookieTB }}
+                  SMART_REPLACE: W3sibWF0Y2giOiJ2YXIgcHJvY2VzcyA9IixyZXBsYWNlOiIkbm9ieWRhLnByb2Nlc3MiLCJkZXNjIjoicHJvY2Vzc+WjsOaYjiIsImNvbmRpdGlvbiI6IiJ9LHsibWF0Y2giOi9wcm9jZXNzLnRvdGFsL2cscmVwbGFjZToiJG5vYnlkYS5wcm9jZXNzLnRvdGFsIiwiZGVzYyI6InByb2Nlc3MudG90YWzlo7DmmI4iLCJjb25kaXRpb24iOiIifSwseyJtYXRjaCI6L3Byb2Nlc3MucmVzdWx0L2cscmVwbGFjZToiJG5vYnlkYS5wcm9jZXNzLnJlc3VsdCIsImRlc2MiOiJwcm9jZXNzLnJlc3VsdOWjsOaYjiIsImNvbmRpdGlvbiI6IiJ9XQ== #[{"match":"var process =",replace:"$nobyda.process","desc":"process声明","condition":""},{"match":/process.total/g,replace:"$nobyda.process.total","desc":"process.total声明","condition":""},,{"match":/process.result/g,replace:"$nobyda.process.result","desc":"process.result声明","condition":""}]

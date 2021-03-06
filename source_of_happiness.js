@@ -4,7 +4,6 @@ const path = require("path");
 const axios = require("axios");
 const aes = require("./javascript/aes");
 const request = require("request");
-//const hot = require("./javascript/hot_require_module");
 
 !(async () => {
     console.log(`北京时间 (UTC+08)：${new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toLocaleString()}\n`);
@@ -27,8 +26,10 @@ const request = require("request");
             let content = await fs.readFileSync("./base.js", "utf-8");
             sweet_heart = `${qx2node}
 ${content}`;
+            if (process.env.CORE_URL && fs.existsSync("./core.js")) {
+                sweet_heart = await require("./core.js").inject(sweet_heart);
+            }
         } else {
-            //let coreJs = hot.require("./core.js");
             let coreJs = require("./core.js");
             console.log(`🟢 注入文件中...`);
             let content = await fs.readFileSync("./base.js", "utf-8");
