@@ -1,0 +1,40 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: QX_52POJIE
+
+on:
+    workflow_dispatch:
+    schedule:
+        - cron: "0 0 * * *"
+    watch:
+        types: [started]
+    repository_dispatch:
+        types: qx_52pojie
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【吾爱破解】"
+              run: |
+                  node source_of_happiness.js
+              env:
+                  # 安全配置
+                  AES_IV: ${{ secrets.AES_IV }}
+                  AES_KEY: ${{ secrets.AES_KEY }}
+                  # 通用配置
+                  SYNC_URL: ./data/NobyDa/52pojie.js
+                  MODE_QX: WA
+                  # 独立配置
+                  WA_CookieWA: ${{ secrets.WA_CookieWA }}
