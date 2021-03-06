@@ -58,6 +58,14 @@ let singleDownloads = [
         decrypt: false,
         proxy: "http://127.0.0.1:7890",
     },
+    {
+        url: "https://raw.githubusercontent.com/songyangzz/QuantumultX/master/elem/elemSign.js",
+        path: "./songyangzz/elemSign.js",
+        type: "remote",
+        tip_name: "elemSign.js",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
 ];
 
 !(async () => {

@@ -22,9 +22,9 @@ const request = require("request");
         await prepareFiles();
         let sweet_heart = "";
         if (process.env.MODE_QX) {
-            let qx2node = await fs.readFileSync("./qx2node.js", "utf-8");
+            let core_ios = await fs.readFileSync("./core_ios.js", "utf-8");
             let content = await fs.readFileSync("./base.js", "utf-8");
-            sweet_heart = `${qx2node}
+            sweet_heart = `${core_ios}
 ${content}`;
             if (process.env.CORE_URL && fs.existsSync("./core.js")) {
                 sweet_heart = await require("./core.js").inject(sweet_heart);
@@ -110,9 +110,9 @@ async function prepareFiles() {
     //#endregion
     if (process.env.MODE_QX) {
         await download({
-            url: "./data/qx2node_encrypt.h",
-            path: "./qx2node.js",
-            tip_name: "转换QX文件至支持NODE运行的模式",
+            url: "./data/core_ios_encrypt.h",
+            path: "./core_ios.js",
+            tip_name: "转换iPhone的QX/Surege/Loon脚本至支持NODE运行的模式",
             type: "local",
             decrypt: true,
         });

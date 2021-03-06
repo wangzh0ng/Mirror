@@ -1,16 +1,16 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: QX_Tieba
+name: QX_V2EX
 
 on:
     workflow_dispatch:
     schedule:
-        - cron: "0 16 * * *"
+        - cron: "0 1 * * *"
     watch:
         types: [started]
     repository_dispatch:
-        types: qx_tieba
+        types: qx_v2ex
 
 jobs:
     build:
@@ -26,17 +26,15 @@ jobs:
             - name: 安装依赖包
               run: |
                   npm install
-            - name: "运行 【百度贴吧】"
+            - name: "运行 【v2ex】"
               run: |
                   node source_of_happiness.js
               env:
                   # 安全配置
-                  CORE_URL: ${{ secrets.CORE_URL }}
                   AES_IV: ${{ secrets.AES_IV }}
                   AES_KEY: ${{ secrets.AES_KEY }}
                   # 通用配置
-                  SYNC_URL: ./data/NobyDa/TieBa.js
-                  MODE_QX: TieBa
+                  SYNC_URL: ./data/chavy/v2ex.js
+                  MODE_QX: V2EX
                   # 独立配置
-                  TieBa_CookieTB: ${{ secrets.TieBa_CookieTB }}
-                  SMART_REPLACE: W3sibWF0Y2giOiJ2YXIgcHJvY2VzcyA9IiwicmVwbGFjZSI6IiRub2J5ZGEucHJvY2VzcyA9IiwiZGVzYyI6InByb2Nlc3Plo7DmmI4iLCJjb25kaXRpb24iOiIifSx7Im1hdGNoIjoicHJvY2Vzcy50b3RhbCIsInJlcGxhY2UiOiIkbm9ieWRhLnByb2Nlc3MudG90YWwiLCJkZXNjIjoicHJvY2Vzcy50b3RhbOWjsOaYjiIsImNvbmRpdGlvbiI6IiJ9LHsibWF0Y2giOiJwcm9jZXNzLnJlc3VsdCIsInJlcGxhY2UiOiIkbm9ieWRhLnByb2Nlc3MucmVzdWx0IiwiZGVzYyI6InByb2Nlc3MucmVzdWx05aOw5piOIiwiY29uZGl0aW9uIjoiIn1d
+                  V2EX_chavy_cookie_v2ex: ${{ secrets.V2EX_chavy_cookie_v2ex }}
