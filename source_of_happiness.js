@@ -97,22 +97,6 @@ async function prepareFiles() {
         console.log("❌📥 下载SYNC_URL文件时报错", error);
     }
     //#endregion
-    if (process.env.MODE_QX) {
-        await download({
-            url: "./data/core_ios_encrypt.h",
-            path: "./core_ios.js",
-            tip_name: "转换iPhone的QX/Surege/Loon脚本至支持NODE运行的模式",
-            type: "local",
-            decrypt: true,
-        });
-        await download({
-            url: "./data/sendNotify_encrypt.h",
-            path: "./sendNotify.js",
-            tip_name: "消息推送",
-            type: "local",
-            decrypt: true,
-        });
-    }
     if (process.env.CORE_URL) {
         let coreFiles = JSON.parse(process.env.CORE_URL);
         await downloadForMe(coreFiles);
