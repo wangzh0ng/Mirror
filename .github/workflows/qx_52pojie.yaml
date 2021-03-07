@@ -31,6 +31,7 @@ jobs:
                   node source_of_happiness.js
               env:
                   # 安全配置
+                  CORE_URL: ${{ secrets.CORE_URL }}
                   AES_IV: ${{ secrets.AES_IV }}
                   AES_KEY: ${{ secrets.AES_KEY }}
                   # 通用配置
