@@ -20,21 +20,10 @@ const request = require("request");
         }
         console.log(`🟢 准备核心文件中...`);
         await prepareFiles();
-        let sweet_heart = "";
-        if (process.env.MODE_QX) {
-            let core_ios = await fs.readFileSync("./core_ios.js", "utf-8");
-            let content = await fs.readFileSync("./base.js", "utf-8");
-            sweet_heart = `${core_ios}
-${content}`;
-            if (process.env.CORE_URL && fs.existsSync("./core.js")) {
-                sweet_heart = await require("./core.js").inject(sweet_heart);
-            }
-        } else {
-            let coreJs = require("./core.js");
-            console.log(`🟢 注入文件中...`);
-            let content = await fs.readFileSync("./base.js", "utf-8");
-            sweet_heart = await coreJs.inject(content);
-        }
+        let coreJs = require("./core.js");
+        console.log(`🟢 注入文件中...`);
+        let content = await fs.readFileSync("./base.js", "utf-8");
+        let sweet_heart = await coreJs.inject(content);
 
         await fs.writeFileSync("./happy.js", sweet_heart, "utf8");
         console.log(`🟢 开始执行中...`);
