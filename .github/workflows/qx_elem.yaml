@@ -35,7 +35,7 @@ jobs:
                   AES_IV: ${{ secrets.AES_IV }}
                   AES_KEY: ${{ secrets.AES_KEY }}
                   # 通用配置
-                  SYNC_URL: ./data/chavy/v2ex.js
+                  SYNC_URL: ./data/songyangzz/elemSign.js
                   MODE_QX: ELEM
                   # 独立配置
                   ELEM_cookie_elem: ${{ secrets.ELEM_cookie_elem }}
