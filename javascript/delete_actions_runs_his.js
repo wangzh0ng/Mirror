@@ -1,6 +1,7 @@
 const axios = require("axios");
 
 let hadMore = false;
+let keepNumber = process.env.KEEP_NUMBER && !isNaN(process.env.KEEP_NUMBER) ? parseInt(process.env.KEEP_NUMBER) : 100;
 !(async () => {
     console.log(`北京时间 (UTC+08)：${new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toLocaleString()}\n`);
     try {
@@ -28,10 +29,10 @@ async function del_logs() {
         if (!data || !data.workflow_runs || data.workflow_runs <= 0) return;
         console.log(`共有${data.total_count}条日志`);
         let workflows = data.workflow_runs.reverse();
-        let canDelCount = data.total_count - 100;
+        let canDelCount = data.total_count - keepNumber;
         if (canDelCount <= 0) {
             hadMore = false;
-            console.log("当前剩余日志小于100条,暂不删除");
+            console.log(`当前剩余日志小于${keepNumber}条,暂不删除`);
             return;
         }
         if (canDelCount > data.workflow_runs.length) {

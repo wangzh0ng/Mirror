@@ -2,10 +2,10 @@ name: FACTORY
 
 on:
     workflow_dispatch:
-    # schedule:
-    #     - cron: "0 */1 * * *"
-    # watch:
-    #     types: [started]
+    schedule:
+        - cron: "0 */1 * * *"
+    watch:
+        types: [started]
     repository_dispatch:
         types: jd_factory
 
