@@ -259,7 +259,7 @@ def resultDisplay():
               + "**绑定账户:**" + "\n```\n" + bindAccount + "\n```\n"\
               + "**设备总数:**" + "\n```\n"+ totalRecord + "\n```\n"\
               + "**设备信息如下:**" + "\n```" + point_infos + "\n"
-    sendNotification(SERVERPUSHKEY,title,content)
+    sendNotification(title,content)
 
 # 推送通知
 def sendNotification(text,desp):
