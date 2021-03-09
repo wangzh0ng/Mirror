@@ -266,6 +266,8 @@ def sendNotification(text,desp):
     print("标题->",text)
     print("内容->\n",desp)
     server_push(text,desp)
+    # 其它推送需要移除一些参数以保障显示效果
+    desp = desp.replace("\n```\n","").replace("**","")
     telegram_bot(text,desp)
     bark(text,desp)
 
