@@ -364,7 +364,8 @@ def main():
     todayPointIncome()
     todayPointDetail()
     pinTotalAvailPoint()
-    resultDisplay()
+    resultDisplay(0)
+    resultDisplay(1)
 
 
 # region 环境变量
