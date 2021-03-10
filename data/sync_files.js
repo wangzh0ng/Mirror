@@ -22,6 +22,14 @@ let gallerys = [
         decrypt: false,
         proxy: "http://127.0.0.1:7890",
     },
+    {
+        url: "https://raw.githubusercontent.com/i-chenzhe/qx/main/qx.gallery.json",
+        path: "./chenzhe/gallery.json",
+        type: "remote",
+        tip_name: "chenzhe_Gallery",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
 ];
 let boxjses = [
     {
@@ -66,14 +74,14 @@ let singleDownloads = [
         decrypt: false,
         proxy: "http://127.0.0.1:7890",
     },
-    {
-        url: "https://raw.githubusercontent.com/leifengwl/JDRouterPush/main/JDRouterPush.py",
-        path: "./leifengwl/JDRouterPush.py",
-        type: "remote",
-        tip_name: "JDRouterPush.py",
-        decrypt: false,
-        proxy: "http://127.0.0.1:7890",
-    },
+    // {
+    //     url: "https://raw.githubusercontent.com/leifengwl/JDRouterPush/main/JDRouterPush.py",
+    //     path: "./leifengwl/JDRouterPush.py",
+    //     type: "remote",
+    //     tip_name: "JDRouterPush.py",
+    //     decrypt: false,
+    //     proxy: "http://127.0.0.1:7890",
+    // },
 ];
 
 !(async () => {
