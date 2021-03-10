@@ -234,23 +234,22 @@ def resultDisplay():
         if pointInfo.get("satisfiedTimes"):
             satisfiedTimes = pointInfo["satisfiedTimes"]
         pointRecords = pointInfo["pointRecords"]
-        point_infos = point_infos + "\n" + "* " + device_name.get(str(mac[-6:]), "京东云无线宝_" + str(mac[-3:])) + "==>" \
-            + "\n   · 今日积分：" + str(todayPointIncome) \
-            + "\n   · 可用积分：" + str(amount) \
-            + "\n   · 总收益积分：" + str(allPointIncome)
-        if satisfiedTimes != "":
-            point_infos = point_infos + "\n   · 累计在线：" + \
-                str(satisfiedTimes) + "天"
-        point_infos = point_infos + "\n   · 最近到期积分：" + str(recentExpireAmount) \
-            + "\n   · 最近到期时间：" + recentExpireTime \
-            + "\n   · 最近" + str(records_num) + "条记录："
+        tmpJson = {"deviceName":device_name.get(str(mac[-6:]), "京东云无线宝_" + str(mac[-3:])),"todayPointIncome":str(todayPointIncome),"useablePoint":str(amount),"totalPointIncome":allPointIncome,"recentExpireAmount":str(recentExpireAmount),"recentExpireTime":str(recentExpireTime),"records_num":str(records_num)}
+        point_infos = point_infos+"""
+* {device} ==>
+   · 今日积分：{todayPointIncome}
+   · 可用积分：{useablePoint}
+   · 总收益积分：{totalPointIncome}
+   · 最近到期积分：{recentExpireAmount}
+   · 最近到期时间：{recentExpireTime}
+   · 最近{records_num}条记录：""".format(**tmpJson)
         for pointRecord in pointRecords:
             recordType = pointRecord["recordType"]
             recordType_str = ""
             if recordType == 1:
-                recordType_str = "积分收入："
+                recordType_str = "收入："
             else:
-                recordType_str = "积分支出："
+                recordType_str = "支出："
             pointAmount = pointRecord["pointAmount"]
             createTime = pointRecord["createTime"]
             point_infos = point_infos + "\n          " + \
