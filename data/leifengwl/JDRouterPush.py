@@ -304,7 +304,7 @@ def displayNormal():
     #         content = content + "\n" + final_result["update_log"] + "\n```"
     # if final_result.get("announcement"):
     #     content = content + "\n> " + final_result["announcement"] + " \n\n"
-    
+
     for pointInfo in pointInfos:
         mac = pointInfo["mac"]
         todayPointIncome = pointInfo["todayPointIncome"]
@@ -340,7 +340,8 @@ def displayNormal():
     notifyContentJson = {"content": content, "date": todayDate, "total_today": today_total_point,
                      "avail_today": total_avail_point, "account": bindAccount, "devicesCount": totalRecord, "detail": point_infos}
     normalContent = """{content}---
-📅{date}🚀收益:{total_today}💵可用积分:{avail_today}📲设备数:{devicesCount}
+📅{date}📲设备数:{devicesCount}
+🚀收益:{total_today}💵可用积分:{avail_today}
 
 **设备信息如下:**
 
@@ -409,9 +410,11 @@ def main():
     print(records_num)
     resolveDeviceName(DEVICENAME)
     checkForUpdates()
+
     todayPointIncome()
     todayPointDetail()
     pinTotalAvailPoint()
+    
     displayServerJ()
     displayNormal()
 
