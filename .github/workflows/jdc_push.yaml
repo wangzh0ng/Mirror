@@ -1,34 +1,32 @@
 name: JDC_PUSH
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 23 * * *'
-    # cron表达式，Actions时区是UTC时间，需要往前推8个小时  此时为6点30推送
+    workflow_dispatch:
+    schedule:
+        - cron: "0 23 * * *"
+        # cron表达式，Actions时区是UTC时间，需要往前推8个小时  此时为6点30推送
 
 jobs:
-  jdcpush:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f ./python/requirements.txt ]; then pip install -r ./python/requirements.txt; fi
-    - name: Run JDRouterPush
-      env:
-          WSKEY: ${{ secrets.WSKEY }}
-          DEVICENAME: ${{ secrets.DEVICENAME }}
-          RECORDSNUM: ${{ secrets.RECORDSNUM }}
-          SERVERPUSHKEY: ${{ secrets.SERVERPUSHKEY }}
-          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
-          TG_USER_ID: ${{ secrets.TG_USER_ID }}
-          BARK: ${{ secrets.BARK }}
-      run: |
-        python data/leifengwl/JDRouterPush.py
+    jdcpush:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: 设置环境为 Python 3.9
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.9
+            - name: 还原依赖包
+              run: |
+                  python -m pip install --upgrade pip
+                  if [ -f ./python/requirements.txt ]; then pip install -r ./python/requirements.txt; fi
+            - name: 执行【京东云无线宝积分查询】
+              env:
+                  WSKEY: ${{ secrets.WSKEY }} # 从京东云无线宝中获取
+                  DEVICENAME: ${{ secrets.DEVICENAME }} # 设备名 mac后6位:设置的名称，多个使用&连接
+                  RECORDSNUM: ${{ secrets.RECORDSNUM }} # 查询记录数,纯数字
+                  SERVERPUSHKEY: ${{ secrets.SERVERPUSHKEY }} # server酱推送的sckey
+                  TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }} # TG推送Token
+                  TG_USER_ID: ${{ secrets.TG_USER_ID }} # TG推送目标用户ID
+                  BARK: ${{ secrets.BARK }} # BarkToken
+              run: |
+                  python data/leifengwl/JDRouterPush.py
