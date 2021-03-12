@@ -20,6 +20,10 @@ const request = require("request");
         }
         console.log(`🟢 准备核心文件中...`);
         await prepareFiles();
+        if (!fs.existsSync("./base.js")) {
+            console.log("❌ 未能获取基础文件，执行暂停。请确保您已配置了·SYNC_URL·");
+            return;
+        }
         console.log(`🟢 注入文件中...`);
         let sweet_heart = await fs.readFileSync("./base.js", "utf-8");
         if (fs.existsSync("./core.js")) {
@@ -27,7 +31,6 @@ const request = require("request");
             let coreJs = require("./core.js");
             sweet_heart = await coreJs.inject(sweet_heart);
         }
-
         await fs.writeFileSync("./happy.js", sweet_heart, "utf8");
         console.log(`🟢 开始执行中...`);
         //此处通过子进程运行,其实也可以通过注入module的方式直接在主进程上运行,不过目前没有这个需求

@@ -18,7 +18,7 @@ device_name = {}
 # 记录数
 records_num = 7
 # 当前版本
-version = "20210304"
+version = "20210311"
 
 # endregion
 
@@ -136,7 +136,7 @@ def todayPointDetail():
         for info in pointInfos:
             mac = info["mac"]
             MAC.append(mac)
-            # routerActivityInfo(mac)
+            routerActivityInfo(mac)
             routerAccountInfo(mac)
             pointOperateRecordsShow(mac)
     else:
@@ -202,7 +202,7 @@ def checkForUpdates():
 # region 通知结果
 
 # 结果显示
-def displayServerJ():
+def resultDisplay():
     today_date = final_result["today_date"]
     today_total_point = final_result["today_total_point"]
     title = today_date + "到账积分:" + today_total_point
@@ -234,22 +234,23 @@ def displayServerJ():
         if pointInfo.get("satisfiedTimes"):
             satisfiedTimes = pointInfo["satisfiedTimes"]
         pointRecords = pointInfo["pointRecords"]
-        tmpJson = {"deviceName":device_name.get(str(mac[-6:]), "京东云无线宝_" + str(mac[-3:])),"todayPointIncome":str(todayPointIncome),"useablePoint":str(amount),"totalPointIncome":allPointIncome,"recentExpireAmount":str(recentExpireAmount),"recentExpireTime":str(recentExpireTime),"records_num":str(records_num)}
-        point_infos = point_infos + """
-* {deviceName} ==>
-   · 今日积分：{todayPointIncome}
-   · 可用积分：{useablePoint}
-   · 总收益积分：{totalPointIncome}
-   · 最近到期积分：{recentExpireAmount}
-   · 最近到期时间：{recentExpireTime}
-   · 最近{records_num}条记录：""".format(**tmpJson)
+        point_infos = point_infos + "\n" + "* " + device_name.get(str(mac[-6:]), "京东云无线宝_" + str(mac[-3:])) + "==>" \
+            + "\n   · 今日积分：" + str(todayPointIncome) \
+            + "\n   · 可用积分：" + str(amount) \
+            + "\n   · 总收益积分：" + str(allPointIncome)
+        if satisfiedTimes != "":
+            point_infos = point_infos + "\n   · 累计在线：" + \
+                str(satisfiedTimes) + "天"
+        point_infos = point_infos + "\n   · 最近到期积分：" + str(recentExpireAmount) \
+            + "\n   · 最近到期时间：" + recentExpireTime \
+            + "\n   · 最近" + str(records_num) + "条记录："
         for pointRecord in pointRecords:
             recordType = pointRecord["recordType"]
             recordType_str = ""
             if recordType == 1:
-                recordType_str = "收入："
+                recordType_str = "积分收入："
             else:
-                recordType_str = "支出："
+                recordType_str = "积分支出："
             pointAmount = pointRecord["pointAmount"]
             createTime = pointRecord["createTime"]
             point_infos = point_infos + "\n          " + \
@@ -283,66 +284,12 @@ def displayServerJ():
 {detail}
 ```""".format(**notifyContentJson)
     server_push(title, serverContent)
-
-def displayNormal():
-    today_date = final_result["today_date"]
-    today_total_point = final_result["today_total_point"]
-    title = today_date + "到账积分:" + today_total_point
-    todayDate = final_result["todayDate"]
-    total_avail_point = final_result["total_avail_point"]
-    totalRecord = final_result["totalRecord"]
-    pointInfos = final_result["pointInfos"]
-    content = ""
-    point_infos = ""
-    bindAccount = ""
-    # 更新检测
-    # if final_result.get("updates_version"):
-    #     content = content + "**JDRouterPush更新提醒:**" \
-    #         + "\n```\n最新版：" + final_result["updates_version"] \
-    #         + "  当前版本：" + version
-    #     if final_result.get("update_log"):
-    #         content = content + "\n" + final_result["update_log"] + "\n```"
-    # if final_result.get("announcement"):
-    #     content = content + "\n> " + final_result["announcement"] + " \n\n"
-
-    for pointInfo in pointInfos:
-        mac = pointInfo["mac"]
-        todayPointIncome = pointInfo["todayPointIncome"]
-        allPointIncome = pointInfo["allPointIncome"]
-        amount = pointInfo["amount"]
-        bindAccount = pointInfo["bindAccount"]
-        recentExpireAmount = pointInfo["recentExpireAmount"]
-        recentExpireTime = pointInfo["recentExpireTime"]
-        satisfiedTimes = ""
-        if pointInfo.get("satisfiedTimes"):
-            satisfiedTimes = pointInfo["satisfiedTimes"]
-        pointRecords = pointInfo["pointRecords"]
-        tmpJson = {"deviceName":device_name.get(str(mac[-6:]), "京东云无线宝_" + str(mac[-3:])),"todayPointIncome":str(todayPointIncome),"useablePoint":str(amount),"totalPointIncome":allPointIncome,"recentExpireAmount":str(recentExpireAmount),"recentExpireTime":str(recentExpireTime),"records_num":str(records_num)}
-        point_infos = point_infos + """
-* {deviceName} ==>
-   · 今日积分：{todayPointIncome}
-   · 可用积分：{useablePoint}
-   · 总收益积分：{totalPointIncome}
-   · 最近到期积分：{recentExpireAmount}
-   · 最近到期时间：{recentExpireTime}
-   · 最近{records_num}条记录：""".format(**tmpJson)
-        for pointRecord in pointRecords:
-            recordType = pointRecord["recordType"]
-            recordType_str = ""
-            if recordType == 1:
-                recordType_str = "收入："
-            else:
-                recordType_str = "支出："
-            pointAmount = pointRecord["pointAmount"]
-            createTime = pointRecord["createTime"]
-            point_infos = point_infos + "\n          " + \
-                createTime + "   " + recordType_str + str(pointAmount)
-    notifyContentJson = {"content": content, "date": todayDate, "total_today": today_total_point,
-                     "avail_today": total_avail_point, "account": bindAccount, "devicesCount": totalRecord, "detail": point_infos}
     normalContent = """{content}---
-📅{date}📲设备数:{devicesCount}
-🚀收益:{total_today}💵可用积分:{avail_today}
-
+数据日期:{date}
+今日总收益:{total_today}
+总可用积分:{avail_today}
+绑定账户:{account}
+设备总数:{devicesCount}
 **设备信息如下:**
 
 {detail}""".format(**notifyContentJson)
@@ -350,6 +297,7 @@ def displayNormal():
     print("内容->\n", normalContent)
     telegram_bot(title, normalContent)
     bark(title, normalContent)
+
 
 # Server酱推送
 def server_push(text, desp):
@@ -410,18 +358,15 @@ def main():
     print(records_num)
     resolveDeviceName(DEVICENAME)
     checkForUpdates()
-
     todayPointIncome()
     todayPointDetail()
     pinTotalAvailPoint()
-    
-    displayServerJ()
-    displayNormal()
+    resultDisplay()
 
 
 # region 环境变量
 
-WSKEY = "AAJf_W6IAEB661y8hFiyUI4Ud3lft-U8uA1R1pTbNDsYlOWptdqckT1rcDYgl3e6hcmAu4OqX5HZzDcYz9n-8d_6uR_YF2iE"#os.environ.get("WSKEY","")                              # 京东云无线宝中获取
+WSKEY = os.environ.get("WSKEY","")                              # 京东云无线宝中获取
 SERVERPUSHKEY = os.environ.get("SERVERPUSHKEY","")              # Server酱推送
 TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN","")                # Telegram推送服务Token
 TG_USER_ID =  os.environ.get("TG_USER_ID","")                   # Telegram推送服务UserId
