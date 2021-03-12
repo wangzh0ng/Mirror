@@ -1,9 +1,9 @@
 const $ = new Env("京东云无线宝积分");
 const notify = $.isNode() ? require("./sendNotify") : "";
 
-const jdc_wskey = $.isNode() ? process.env["JDC_WSKEY"] : $.getdata("JDC_WSKEY");
-const devicenames = $.isNode() ? process.env["DEVICENAME"] : $.getdata("DEVICENAME");
-var recordnumTmp = $.isNode() ? process.env["RECORDSNUM"] : $.getdata("RECORDSNUM");
+const jdc_wskey = $.isNode() ? process.env["JDC_WSKEY"] : $.getdata("JDC_WSKEY"); //从京东云无线宝中获取,自行抓包
+const devicenames = $.isNode() ? process.env["DEVICENAME"] : $.getdata("DEVICENAME"); //设备名 mac:设置的名称，多个使用&连接,
+var recordnumTmp = $.isNode() ? process.env["RECORDSNUM"] : $.getdata("RECORDSNUM"); //查询记录数,纯数字
 const recordnum = isNaN(recordnumTmp) ? 7 : recordnumTmp;
 
 !(async () => {
@@ -16,13 +16,22 @@ const recordnum = isNaN(recordnumTmp) ? 7 : recordnumTmp;
     $.pinTotalAvailPoint = await load("pinTotalAvailPoint"); //{"totalAvailPoint":7364}
     $.todayPointIncome = await load("todayPointIncome"); //{"todayTotalPoint":145,"todayDate":"2021-03-11"}
     $.todayPointDetail = await load("todayPointDetail?sortField=today_point&pageSize=30&currentPage=1"); //{"todayDate":"2021-03-11","pointInfos":[{"mac":"DCD87C******","todayPointIncome":84,"allPointIncome":11676}],"pageInfo":{"currentPage":1,"pageSize":30,"totalRecord":3,"totalPage":1}}
-    if ($.todayPointDetail && $.todayPointDetail.pointInfos) {
-        for (const pointInfo of $.todayPointDetail.pointInfos) {
-            pointInfo.accountInfo = await load(`routerAccountInfo?mac=${pointInfo.mac}`).accountInfo; //{"accountInfo":{"mac":"DCD87C13008E","amount":1581,"bindAccount":"sazn1314","recentExpireAmount":10,"recentExpireTime":1643580685000}}
-            pointInfo.records = await load(
-                `pointOperateRecords:show?mac=${pointInfo.mac}&source=1&currentPage=1&pageSize=${recordnum}`
-            ).pointRecords; //{"pointRecords":[{"recordType":1,"exchangeType":1,"pointAmount":26,"beanAmount":0,"createTime":1615414545000},{"recordType":1,"exchangeType":1,"pointAmount":36,"beanAmount":0,"createTime":1615327880000},{"recordType":1,"exchangeType":1,"pointAmount":25,"beanAmount":0,"createTime":1615241507000}],"pageInfo":{"currentPage":1,"pageSize":7,"totalRecord":40,"totalPage":6}}
+    if ($.todayPointDetail && $.todayPointDetail.pointInfos && $.todayPointDetail.pointInfos.length > 0) {
+        for (var i = 0; i < $.todayPointDetail.pointInfos.length; i++) {
+            let routerAccountInfo = await load(`routerAccountInfo?mac=${$.todayPointDetail.pointInfos[i].mac}`);
+            $.todayPointDetail.pointInfos[i].accountInfo = routerAccountInfo.accountInfo; //{"accountInfo":{"mac":"DCD87C13008E","amount":1581,"bindAccount":"sazn1314","recentExpireAmount":10,"recentExpireTime":1643580685000}}
+            let pointOperateRecords = await load(
+                `pointOperateRecords:show?mac=${$.todayPointDetail.pointInfos[i].mac}&source=1&currentPage=1&pageSize=${recordnum}`
+            );
+            $.todayPointDetail.pointInfos[i].records = pointOperateRecords.pointRecords; //{"pointRecords":[{"recordType":1,"exchangeType":1,"pointAmount":26,"beanAmount":0,"createTime":1615414545000},{"recordType":1,"exchangeType":1,"pointAmount":36,"beanAmount":0,"createTime":1615327880000},{"recordType":1,"exchangeType":1,"pointAmount":25,"beanAmount":0,"createTime":1615241507000}],"pageInfo":{"currentPage":1,"pageSize":7,"totalRecord":40,"totalPage":6}}
         }
+        // for (const pointInfo of $.todayPointDetail.pointInfos) {
+        // }
+    }
+    let content = await getNotify();
+    $.msg($.name, content);
+    if ($.isNode()) {
+        await notify.sendNotify($.name, content);
     }
 })()
     .catch((e) => {
@@ -32,14 +41,60 @@ const recordnum = isNaN(recordnumTmp) ? 7 : recordnumTmp;
         $.done();
     });
 
-function getNotify() {
-    $.result = {
-        title: `📅${$.todayPointIncome.todayDate} 📲设备数${$.todayPointDetail.pageInfo.totalRecord}- 💵收益${$.todayPointIncome.todayTotalPoint}积分`,
-        content: "",
-    };
+async function getNotify() {
+    let content = "";
+    if ($.todayPointIncome && $.todayPointDetail && $.todayPointDetail.pageInfo) {
+        content += `📅${$.todayPointIncome.todayDate}  📲设备数${$.todayPointDetail.pageInfo.totalRecord}  💵获得${$.todayPointIncome.todayTotalPoint}积分`;
+    }
+    content += `\n\n==================设备信息==================`;
+    if ($.todayPointDetail && $.todayPointDetail.pointInfos && $.todayPointDetail.pointInfos.length > 0) {
+        for (const pointInfoByDevice of $.todayPointDetail.pointInfos) {
+            content += `
+
+❤️【${getNickNameByMac(pointInfoByDevice.mac)}】
+💱今日积分${pointInfoByDevice.todayPointIncome}  ✔️可用积分${
+                pointInfoByDevice.accountInfo ? pointInfoByDevice.accountInfo.amount : "0"
+            }  💲总积分${pointInfoByDevice.allPointIncome}
+`;
+            if (
+                pointInfoByDevice.accountInfo.recentExpireAmount > 0 &&
+                pointInfoByDevice.accountInfo.recentExpireTime - new Date().getTime() <= 60 * 24 * 60 * 60
+            ) {
+                content += `⚠️⚠️⚠️最近60天内(${dateFormat(
+                    new Date(pointInfoByDevice.accountInfo.recentExpireTime),
+                    "yyyy-MM-dd"
+                )})即将过期(${pointInfoByDevice.accountInfo.recentExpireAmount})积分，请尽快兑换\n`;
+            }
+            for (var i = 0; i < pointInfoByDevice.records.length; i++) {
+                var recordInfo = pointInfoByDevice.records[i];
+                var date = new Date(recordInfo.createTime);
+                var operate = recordInfo.recordType == 1 ? "收入" : "支出";
+                var amount = recordInfo.pointAmount < 100 ? "  " + recordInfo.pointAmount : recordInfo.pointAmount;
+                content += `📆${dateFormat(date, "MM月dd日")} ${operate}${amount}积分${i % 2 == 1 ? "\n" : "    "}`;
+            }
+        }
+    }
+    return content;
 }
 
-async function load(method, params) {
+function getNickNameByMac(mac) {
+    var nickName = mac;
+    if (devicenames) {
+        var subNames = devicenames.split("&");
+        for (var sn of subNames) {
+            var n = sn.split(/[：|:]/);
+            if (n.length <= 1) continue;
+            if (mac.indexOf(n[0]) >= 0) {
+                nickName = n[1];
+                break;
+            }
+        }
+    }
+
+    return nickName;
+}
+
+async function load(method) {
     return new Promise((resolve) => {
         var request = {
             url: `https://router-app-api.jdcloud.com/v1/regions/cn-north-1/${method}`,
@@ -48,7 +103,6 @@ async function load(method, params) {
                 "Content-Type": "application/json",
                 wskey: jdc_wskey,
             },
-            // params: JSON.stringify(params),
         };
         var response = undefined;
         $.get(request, (err, resp, data) => {
@@ -83,6 +137,43 @@ function safeGet(data) {
         console.log(e);
         return false;
     }
+}
+
+function dateFormat(date, fmt) {
+    var o = {
+        "M+": date.getMonth() + 1, //月份
+        "d+": date.getDate(), //日
+        "h+": date.getHours() % 12 == 0 ? 12 : date.getHours() % 12, //小时
+        "H+": date.getHours(), //小时
+        "m+": date.getMinutes(), //分
+        "s+": date.getSeconds(), //秒
+        "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+        S: date.getMilliseconds(), //毫秒
+    };
+    var week = {
+        0: "/u65e5",
+        1: "/u4e00",
+        2: "/u4e8c",
+        3: "/u4e09",
+        4: "/u56db",
+        5: "/u4e94",
+        6: "/u516d",
+    };
+    if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    if (/(E+)/.test(fmt)) {
+        fmt = fmt.replace(
+            RegExp.$1,
+            (RegExp.$1.length > 1 ? (RegExp.$1.length > 2 ? "/u661f/u671f" : "/u5468") : "") + week[date.getDay() + ""]
+        );
+    }
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        }
+    }
+    return fmt;
 }
 
 // prettier-ignore
