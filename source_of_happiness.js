@@ -20,10 +20,13 @@ const request = require("request");
         }
         console.log(`🟢 准备核心文件中...`);
         await prepareFiles();
-        let coreJs = require("./core.js");
         console.log(`🟢 注入文件中...`);
-        let content = await fs.readFileSync("./base.js", "utf-8");
-        let sweet_heart = await coreJs.inject(content);
+        let sweet_heart = await fs.readFileSync("./base.js", "utf-8");
+        if (fs.existsSync("./core.js")) {
+            //存在核心文件时才进行注入,否则啥都不用管
+            let coreJs = require("./core.js");
+            sweet_heart = await coreJs.inject(sweet_heart);
+        }
 
         await fs.writeFileSync("./happy.js", sweet_heart, "utf8");
         console.log(`🟢 开始执行中...`);
@@ -98,15 +101,21 @@ async function prepareFiles() {
     }
     //#endregion
     if (process.env.CORE_URL) {
-        let coreFiles = JSON.parse(process.env.CORE_URL);
-        await downloadForMe(coreFiles);
+        try {
+            let coreFiles = JSON.parse(process.env.CORE_URL);
+            await downloadForMe(coreFiles);
+        } catch (error) {
+            console.log("❌📥 下载CORE_URL文件时报错", error);
+        }
     }
-    try {
-        if (!process.env.EXTEND_URL) return;
-        let extendFiles = JSON.parse(process.env.EXTEND_URL);
-        await downloadForMe(extendFiles);
-    } catch (error) {
-        console.log("❌📥 下载EXTEND_URL文件时报错", error);
+
+    if (process.env.EXTEND_URL) {
+        try {
+            let extendFiles = JSON.parse(process.env.EXTEND_URL);
+            await downloadForMe(extendFiles);
+        } catch (error) {
+            console.log("❌📥 下载EXTEND_URL文件时报错", error);
+        }
     }
 }
 
