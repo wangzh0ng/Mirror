@@ -110,8 +110,8 @@ async function load(method) {
                     console.log(`${$.name} API请求失败，请检查网路重试`);
                 } else {
                     if (data && safeGet(data)) {
-                        var temp = JSON.parse(data);
-                        $.log(JSON.stringify(temp.result));
+                        // var temp = JSON.parse(data);
+                        // $.log(JSON.stringify(temp.result));
                         if (temp.code == 200) {
                             response = temp.result;
                         }

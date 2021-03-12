@@ -74,14 +74,14 @@ let singleDownloads = [
         decrypt: false,
         proxy: "http://127.0.0.1:7890",
     },
-    // {
-    //     url: "https://raw.githubusercontent.com/leifengwl/JDRouterPush/main/JDRouterPush.py",
-    //     path: "./leifengwl/JDRouterPush.py",
-    //     type: "remote",
-    //     tip_name: "JDRouterPush.py",
-    //     decrypt: false,
-    //     proxy: "http://127.0.0.1:7890",
-    // },
+    {
+        url: "https://raw.githubusercontent.com/leifengwl/JDRouterPush/main/JDRouterPush.py",
+        path: "./leifengwl/JDRouterPush.py",
+        type: "remote",
+        tip_name: "JDRouterPush.py",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
 ];
 
 !(async () => {
