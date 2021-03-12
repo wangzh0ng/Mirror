@@ -2,8 +2,8 @@ const $ = new Env("京东云无线宝积分");
 const notify = $.isNode() ? require("./sendNotify") : "";
 
 const jdc_wskey = $.isNode() ? process.env["JDC_WSKEY"] : $.getdata("JDC_WSKEY"); //从京东云无线宝中获取,自行抓包
-const devicenames = $.isNode() ? process.env["DEVICENAME"] : $.getdata("DEVICENAME"); //设备名 mac全名称或后六位:设置的名称，多个使用&连接,例如 1CECF2:测试1&DCD87C2305D6:hahaha
-var recordnumTmp = $.isNode() ? process.env["RECORDSNUM"] : $.getdata("RECORDSNUM"); //查询记录数,纯数字,默认值为7
+const devicenames = $.isNode() ? process.env["JDC_DEVICENAME"] : $.getdata("JDC_DEVICENAME"); //设备名 mac全名称或后六位:设置的名称，多个使用&连接,例如 1CECF2:测试1&DCD87C2305D6:hahaha
+var recordnumTmp = $.isNode() ? process.env["JDC_RECORDSNUM"] : $.getdata("JDC_RECORDSNUM"); //查询记录数,纯数字,默认值为7
 const recordnum = isNaN(recordnumTmp) ? 7 : recordnumTmp;
 
 !(async () => {
