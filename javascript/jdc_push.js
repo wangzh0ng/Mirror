@@ -2,8 +2,8 @@ const $ = new Env("京东云无线宝积分");
 const notify = $.isNode() ? require("./sendNotify") : "";
 
 const jdc_wskey = $.isNode() ? process.env["JDC_WSKEY"] : $.getdata("JDC_WSKEY"); //从京东云无线宝中获取,自行抓包
-const devicenames = $.isNode() ? process.env["DEVICENAME"] : $.getdata("DEVICENAME"); //设备名 mac:设置的名称，多个使用&连接,
-var recordnumTmp = $.isNode() ? process.env["RECORDSNUM"] : $.getdata("RECORDSNUM"); //查询记录数,纯数字
+const devicenames = $.isNode() ? process.env["DEVICENAME"] : $.getdata("DEVICENAME"); //设备名 mac全名称或后六位:设置的名称，多个使用&连接,例如 1CECF2:测试1&DCD87C2305D6:hahaha
+var recordnumTmp = $.isNode() ? process.env["RECORDSNUM"] : $.getdata("RECORDSNUM"); //查询记录数,纯数字,默认值为7
 const recordnum = isNaN(recordnumTmp) ? 7 : recordnumTmp;
 
 !(async () => {
@@ -19,14 +19,12 @@ const recordnum = isNaN(recordnumTmp) ? 7 : recordnumTmp;
     if ($.todayPointDetail && $.todayPointDetail.pointInfos && $.todayPointDetail.pointInfos.length > 0) {
         for (var i = 0; i < $.todayPointDetail.pointInfos.length; i++) {
             let routerAccountInfo = await load(`routerAccountInfo?mac=${$.todayPointDetail.pointInfos[i].mac}`);
-            $.todayPointDetail.pointInfos[i].accountInfo = routerAccountInfo.accountInfo; //{"accountInfo":{"mac":"DCD87C13008E","amount":1581,"bindAccount":"sazn1314","recentExpireAmount":10,"recentExpireTime":1643580685000}}
+            $.todayPointDetail.pointInfos[i].accountInfo = routerAccountInfo.accountInfo; //{"accountInfo":{"mac":"DCD87C******","amount":1581,"bindAccount":"******","recentExpireAmount":10,"recentExpireTime":1643580685000}}
             let pointOperateRecords = await load(
                 `pointOperateRecords:show?mac=${$.todayPointDetail.pointInfos[i].mac}&source=1&currentPage=1&pageSize=${recordnum}`
             );
             $.todayPointDetail.pointInfos[i].records = pointOperateRecords.pointRecords; //{"pointRecords":[{"recordType":1,"exchangeType":1,"pointAmount":26,"beanAmount":0,"createTime":1615414545000},{"recordType":1,"exchangeType":1,"pointAmount":36,"beanAmount":0,"createTime":1615327880000},{"recordType":1,"exchangeType":1,"pointAmount":25,"beanAmount":0,"createTime":1615241507000}],"pageInfo":{"currentPage":1,"pageSize":7,"totalRecord":40,"totalPage":6}}
         }
-        // for (const pointInfo of $.todayPointDetail.pointInfos) {
-        // }
     }
     let content = await getNotify();
     $.msg($.name, content);
