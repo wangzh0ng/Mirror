@@ -68,7 +68,7 @@ async function getNotify() {
                 var date = new Date(recordInfo.createTime);
                 var operate = recordInfo.recordType == 1 ? "收入" : "支出";
                 var amount = recordInfo.pointAmount < 100 ? "  " + recordInfo.pointAmount : recordInfo.pointAmount;
-                content += `📆${dateFormat(date, "MM月dd日")} ${operate}${amount}积分${i % 2 == 1 ? "\n" : "    "}`;
+                content += `📆${dateFormat(date, "MM月dd日")}${operate}${amount}💰${i % 2 == 1 ? "\n" : "    "}`;
             }
         }
     }
