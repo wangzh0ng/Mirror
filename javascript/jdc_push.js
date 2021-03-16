@@ -44,7 +44,7 @@ async function getNotify() {
     if ($.todayPointIncome && $.todayPointDetail && $.todayPointDetail.pageInfo) {
         content += `📅${$.todayPointIncome.todayDate}  📲设备数${$.todayPointDetail.pageInfo.totalRecord}  💵获得${$.todayPointIncome.todayTotalPoint}积分`;
     }
-    content += `\n\n==================设备信息==================`;
+    content += `\n\n==============设备信息==============`;
     if ($.todayPointDetail && $.todayPointDetail.pointInfos && $.todayPointDetail.pointInfos.length > 0) {
         for (const pointInfoByDevice of $.todayPointDetail.pointInfos) {
             content += `
