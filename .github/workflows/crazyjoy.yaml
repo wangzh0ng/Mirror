@@ -25,6 +25,7 @@ jobs:
               run: |
                   npm install
             - name: "运行 【疯狂的JOY每日任务】"
+              timeout-minutes: 60
               run: |
                   node source_of_happiness.js
               env:
