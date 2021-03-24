@@ -85,7 +85,23 @@ jobs:
                   node source_of_happiness.js
               env:
                   SYNC_URL: ./data/jd_scripts/jd_jxd.js
-                  # 独立配置
-                  JD_BEAN_STOP: ${{ secrets.JD_BEAN_STOP }} # 自定义延迟签到,单位毫秒. 默认分批并发无延迟. 延迟作用于每个签到接口, 如填入延迟则切换顺序签到(耗时较长),如需填写建议输入数字1
-                  JD_BEAN_SIGN_STOP_NOTIFY: ${{ secrets.JD_BEAN_SIGN_STOP_NOTIFY || github.event.client_payload.JD_BEAN_SIGN_STOP_NOTIFY}} # jd_bean_sign.js脚本运行后不推送签到结果通知，默认推送，填true表示不发送通知
-                  JD_BEAN_SIGN_NOTIFY_SIMPLE: ${{ secrets.JD_BEAN_SIGN_NOTIFY_SIMPLE || github.event.client_payload.JD_BEAN_SIGN_NOTIFY_SIMPLE}} # jd_bean_sign.js脚本运行后推送签到结果简洁版通知，默认推送全部签到结果，填true表示推送简洁通知
+    jd_sgmh:
+        name: 闪购魔盒
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: 设置运行环境-Node.js 12
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "12"
+            - name: 安装依赖包
+              run: |
+                  npm install
+            - name: "运行 【JD闪购魔盒】"
+              timeout-minutes: 30
+              run: |
+                  node source_of_happiness.js
+              env:
+                  SYNC_URL: ./data/jd_scripts/jd_sgmh.js
