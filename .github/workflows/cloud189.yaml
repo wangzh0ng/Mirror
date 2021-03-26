@@ -1,0 +1,38 @@
+name: CHINA_TELECOM_CLOUD
+
+on:
+    workflow_dispatch:
+    schedule:
+        - cron: "0 3,13 * * *"
+    watch:
+        types: [started]
+    repository_dispatch:
+        types: xmly_speed
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: "Set up Python"
+              uses: actions/setup-python@v1
+              with:
+                  python-version: 3.7
+
+            - name: "安装依赖包"
+              run: pip install -r ./python/requirements.txt
+
+            - name: "运行 天翼云盘签到"
+              run: python3 python/chinaTelecomCloud.py
+              env:
+                  # 推送专用
+                  PUSH_KEY: ${{ secrets.PUSH_KEY }}
+                  BARK_PUSH: ${{ secrets.BARK_PUSH }}
+                  BARK_SOUND: ${{ secrets.BARK_SOUND }}
+                  TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+                  TG_USER_ID: ${{ secrets.TG_USER_ID }}
+                  #独立配置
+                  CLOUD189_ACCOUNT: ${{ secrets.CLOUD189_ACCOUNT }} # 天翼云盘账号密码
