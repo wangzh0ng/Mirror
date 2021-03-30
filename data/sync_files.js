@@ -22,14 +22,6 @@ let gallerys = [
         decrypt: false,
         proxy: "http://127.0.0.1:7890",
     },
-    {
-        url: "https://raw.githubusercontent.com/i-chenzhe/qx/main/qx.gallery.json",
-        path: "./chenzhe/gallery.json",
-        type: "remote",
-        tip_name: "chenzhe_Gallery",
-        decrypt: false,
-        proxy: "http://127.0.0.1:7890",
-    },
 ];
 let boxjses = [
     {
