@@ -48,6 +48,14 @@ let boxjses = [
         decrypt: false,
         proxy: "http://127.0.0.1:7890",
     },
+    {
+        url: "https://raw.githubusercontent.com/monk-coder/dust/dust/i-chenzhe/qx.gallery.json",
+        path: "./chenzhe/boxjs.json",
+        type: "remote",
+        tip_name: "chenzhe",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
 ];
 let singleDownloads = [
     {
