@@ -39,7 +39,7 @@ const helpAu = true; //帮作者助力 免费拿活动
 const notify = $.isNode() ? require('./sendNotify') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
-let tuanActiveId = `6S9y4sJUfA2vPQP6TLdVIQ==`;
+let tuanActiveId = `0_pzMedR7KhclCkMIgkTkg==`;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '', allMessage = '';
 const inviteCodes = [
@@ -144,7 +144,6 @@ async function jdDreamFactory() {
     await tuanActivity();
     await QueryAllTuan();
     await exchangeProNotify();
-    await test2()
     await showMsg();
     if (helpAu === true) await helpAuthor();
   } catch (e) {
@@ -230,30 +229,6 @@ function investElectric() {
   })
 }
 
-function test2() {
-  var headers = {
-    'Host': 'api.m.jd.com',
-    'Origin': 'https://openredpacket-jdlite.jd.com',
-    'Accept': 'application/json, text/plain, */*',
-    'User-Agent': 'jdltapp;iPhone;3.3.2;14.4.1;;network/wifi;hasUPPay/0;pushNoticeIsOpen/0;lang/zh_CN;model/iPhone13,2;addressid/137923973;hasOCPay/0;appBuild/1047;supportBestPay/0;pv/268.36;apprpd/MyJD_Main;ref/https%3A%2F%2Fopenredpacket-jdlite.jd.com%2F%3Flng%3D118.762833%26lat%3D32.242491%26sid%3D8add69d8890bc7f4919f99fb3190f87w%26un_area%3D12_904_908_57903%23%2Fdemolished%3FactId%3Dfa03b421fc63499f8e7cd2a3434a6934;psq/22;ads/;psn/2618472e6e237c0252a67dffefc09de587946e87|680;jdv/0|kong|t_2008333145_|jingfen|7e4ac355e0dc416a99409fff0461a396|1617205187;adk/;app_device/IOS;pap/JA2020_3112531|3.3.2|IOS 14.4.1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
-    'Referer': 'https://openredpacket-jdlite.jd.com/',
-    'Accept-Language': 'zh-cn',
-    'Cookie': cookie};
-
-  var dataString = 'client=megatron&clientVersion=1.0.0&networkType=&eid=&fp=-1&uuid=&osVersion=14.4.1&d_brand=&d_model=&pageClickKey=-1&screen=390*844&lang=zh_CN&functionId=dismantleRedEnvelope&body=%7B%22packetId%22%3A%22af81d6fc0c19499caa15c24e637bcffc%22%2C%22actId%22%3A%22fa03b421fc63499f8e7cd2a3434a6934%22%2C%22frontendInitStatus%22%3A%22s%22%2C%22antiToken%22%3A%22i9sbdb9xfi8lbaiqu7h1617469247628u5pk%7ENmZeSyVEbFNSd3Z6cFdUBXh2AgBiRHpTBiUjb35DFm5vLUROOBEzLUF7G28iAAFBKBgVFA1EPwIVKDclGENXbm8iVlQiAwpTTx1lKSsTCG5vfmsaDUR6LUEnG29%2BPU9QfSZTAGNeYBBQdHZ8JlJVBnt1BV1gB2QUViMmKSAEXgt8JVlkc0oKUwoyKhFmWzEQOTZCXQ1Eei1BKTQ5GENXbm8rR10%2FFDMVEyAkJiEVQFgpKF5MNEg8FU0iKCAYQ0FubzRZZHNcClNMHWVhGEMdRhFmDWRzDiIFEzJ9EWZNMRA9LWsaazp0QFBtdGF1U0ECYXUbC2M6dAxBbWUoIAUeVW9%2BFUhnDz1TT2MkPmZbTwZ%2BPEZRNVEkHFJ3NzwnCgBIJnNPXiNQIUFRNih8KQAeVyYyBBp9RDVTWWMoP3RSFVclfU5UIgw0BRUrfjovUFsDenABAWNSYUdReT4iNQpPHm8gRFZzXHQAVnZ%2FfCpQChBhZl5Lc1x0QEFtZSctAk8Ib30OAWhEKw%3D%3D%7C%7E1617469755435%7E1%7E20201218%7EeyJ2aXdlIjoiMCIsImJhaW4iOnt9fQ%3D%3D%7E2%7E241%7Espln%7C5d25c-4c%2Cao%2C%2C%3Bbd1q-4c%2Cap%2C16%2Ct%3Bdoei%3A%2C1%2C0%2C0%2C0%2C0%2C1000%2C-1000%2C1000%2C-1000%3Bdmei%3A%2C1%2C0%2C0%2C1000%2C-1000%2C1000%2C-1000%2C1000%2C-1000%3Bemc%3A%2Cd%3A1%3Bemmm%3A%3Bemcf%3A%2Cd%3A1%3Bivli%3A%3Biivl%3A%3Bivcvj%3A%3Bscvje%3A%3Bewhi%3A%3B1617469752582%2C1617469755434%2C0%2C0%2C2%2C2%2C0%2C1%2C0%2C0%2C0%3Bzva3%22%2C%22platform%22%3A3%7D&t=1617469755436&_t=1617469755436';
-
-  var options = {
-    url: `https://api.m.jd.com/?_t=${+new Date()}`,
-    method: 'POST',
-    headers: headers,
-    body: dataString
-  };
-  return new Promise(resolve => {
-    $.post(options,(err,resp,data)=>{
-      resolve()
-    })
-  })
-}
 // 初始化任务
 function taskList() {
   return new Promise(async resolve => {
