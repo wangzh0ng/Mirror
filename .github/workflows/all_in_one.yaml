@@ -311,7 +311,7 @@ jobs:
             - name: 安装依赖包
               run: |
                   npm install
-            - name: "运行 【JD全民抢红包】"
+            - name: "运行 【JD全民抢红包*】"
               run: |
                   node source_of_happiness.js
               env:
@@ -370,7 +370,7 @@ jobs:
             - name: 安装依赖包
               run: |
                   npm install
-            - name: "运行 【JD十元街】"
+            - name: "运行 【JD十元街*】"
               timeout-minutes: 350
               run: |
                   node source_of_happiness.js
