@@ -269,8 +269,7 @@ async function download(downloadConfig) {
                                 },
                             },
                             function (error, response, body) {
-                                if(error || request.statusCode!= 200 ||!body) resolve(null);
-                                else resolve(body);
+                                resolve(body);
                             }
                         );
                     });
@@ -279,7 +278,7 @@ async function download(downloadConfig) {
                 fcontent = await axios.get(url).data;
             }
         }
-        if (!fcontent) {
+        if (!fcontent || fcontent.lenhth <= 10) {
             console.log(`❌📥 【${typeDes}】${tip_name}时未获取到对应数据`);
             return;
         }
