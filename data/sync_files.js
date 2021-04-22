@@ -278,7 +278,7 @@ async function download(downloadConfig) {
                 fcontent = await axios.get(url).data;
             }
         }
-        if (!fcontent || fcontent.lenhth <= 10) {
+        if (!fcontent || fcontent.length <= 10) {
             console.log(`❌📥 【${typeDes}】${tip_name}时未获取到对应数据`);
             return;
         }
