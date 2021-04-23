@@ -269,8 +269,13 @@ async function download(downloadConfig) {
                                 },
                             },
                             function (error, response, body) {
-                                if(error || request.statusCode!= 200 ||!body) resolve(null);
-                                else resolve(body);
+                                if (error || !body || response.statusCode != 200) {
+                                    console.log("下载失败-" + response ? response.statusCode : "未获取状态码");
+                                    resolve(null);
+                                } else {
+                                    // console.log("下载完毕-" + url + "|--" + response.statusCode);
+                                    resolve(body);
+                                }
                             }
                         );
                     });
