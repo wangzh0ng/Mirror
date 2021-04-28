@@ -34,6 +34,10 @@
         "terser": "5.6.0",
         "ws": "^7.4.4",
         "dotenv": "^8.2.0",
-        "js-yaml": "^4.0.0"
+        "js-yaml": "^4.0.0",
+        "@actions/core": "^1.2.6",
+        "@actions/github": "^4.0.0",
+        "@octokit/core": "^3.1.2",
+        "tweetsodium": "0.0.5"
     }
 }
