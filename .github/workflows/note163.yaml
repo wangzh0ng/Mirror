@@ -11,7 +11,7 @@ on:
 
 # 密码需用MD5加密工具加密，加密格式为32位[小]:(https://tool.chinaz.com/tools/md5.aspx)
 # 支持多账号，账号之间与密码之间用半角逗号分隔，账号于密码的个数要对应
-# 示例：USER:123456,24678，PWD:cxkjntm,jntmcxk
+# 示例：YOUDAO_USER:123456,24678，YOUDAP_PWD:cxkjntm,jntmcxk
 
 jobs:
     build:
