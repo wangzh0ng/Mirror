@@ -1,0 +1,12 @@
+{
+  "open": false,
+  "newOpen": false,
+  "appOpen":true,
+  "versionCode": 126,
+  "appHint":"由于某些原因，升级流程有所改变，希望大家在当前页面等待升级，升级到1.3.7版本（包括1.3.7）以上，老版本停止使用！",
+  "openAd":false,
+  "rewardHint":"撸码不易，希望各位打赏一波鼓励鼓励，你们的鼓励就是我的动力，谢谢各位！",
+  "rewardNum":1,
+  "message":"关注微信公众号“Movie影视”，请在学习交流中直接扫码关注，可以获取最新体验版本哦~",
+  "messageNum":3
+}

@@ -82,25 +82,41 @@ let singleDownloads = [
         decrypt: false,
         proxy: "http://127.0.0.1:7890",
     },
+    {
+        url: "https://gitee.com/pj567/TVMovie/raw/master/source/source.json",
+        path: "./tv_source/source.json",
+        type: "remote",
+        tip_name: "source.json",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
+    {
+        url: "https://gitee.com/pj567/TVMovie/raw/master/source/appStatus.json",
+        path: "./tv_source/appStatus.json",
+        type: "remote",
+        tip_name: "appStatus.json",
+        decrypt: false,
+        proxy: "http://127.0.0.1:7890",
+    },
 ];
 
 !(async () => {
     console.log(`北京时间 (UTC+08)：${new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toLocaleString()}\n`);
 
-    for (const gallery of gallerys) {
-        try {
-            await getFromGallery(gallery);
-        } catch (e) {
-            console.log("🔴 执行异常:" + e);
-        }
-    }
-    for (const boxjs of boxjses) {
-        try {
-            await getFromBoxjs(boxjs);
-        } catch (e) {
-            console.log("🔴 执行异常:" + e);
-        }
-    }
+    // for (const gallery of gallerys) {
+    //     try {
+    //         await getFromGallery(gallery);
+    //     } catch (e) {
+    //         console.log("🔴 执行异常:" + e);
+    //     }
+    // }
+    // for (const boxjs of boxjses) {
+    //     try {
+    //         await getFromBoxjs(boxjs);
+    //     } catch (e) {
+    //         console.log("🔴 执行异常:" + e);
+    //     }
+    // }
     for (const singleDownload of singleDownloads) {
         await download(singleDownload);
     }
