@@ -99,10 +99,22 @@ let singleDownloads = [
         proxy: "http://127.0.0.1:7890",
     },
 ];
+let githubApiDownloads = [
+    {
+        repo: "nianyuguai",
+        owner: "longzhuzhu",
+        branch: "main",
+        path_regex: /^qx\/.*/,
+        proxy: "http://127.0.0.1:7890",
+    },
+
+    // https://api.github.com/repos/nianyuguai/longzhuzhu/git/trees/main?recursive=1
+];
 
 !(async () => {
     console.log(`北京时间 (UTC+08)：${new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toLocaleString()}\n`);
 
+    console.log("===============从Gallery中获取===============");
     for (const gallery of gallerys) {
         try {
             await getFromGallery(gallery);
@@ -110,6 +122,7 @@ let singleDownloads = [
             console.log("🔴 执行异常:" + e);
         }
     }
+    console.log("===============从BOXJS中获取===============");
     for (const boxjs of boxjses) {
         try {
             await getFromBoxjs(boxjs);
@@ -117,8 +130,13 @@ let singleDownloads = [
             console.log("🔴 执行异常:" + e);
         }
     }
+    console.log("===============从指定链接中获取===============");
     for (const singleDownload of singleDownloads) {
         await download(singleDownload);
+    }
+    console.log("===============从github指定路径中获取===============");
+    for (const githubInfo of githubApiDownloads) {
+        await getFromGithubApi(githubInfo);
     }
     // console.log("\n下载完毕,当前目录列表为\n", await collectFiles("./", true));
 })()
@@ -214,6 +232,55 @@ async function getFromBoxjs(boxjs) {
         await download(downloadConfig);
     }
 }
+async function getFromGithubApi(githubInfo) {
+    let apiUrl = `https://api.github.com/repos/${githubInfo.repo}/${githubInfo.owner}/git/trees/${githubInfo.branch}?recursive=1`;
+    let fcontent = "";
+    if (githubInfo.proxy) {
+        fcontent = await (() => {
+            return new Promise((resolve) => {
+                request(
+                    {
+                        url: apiUrl,
+                        method: "GET",
+                        proxy: githubInfo.proxy,
+                        headers: {
+                            "User-Agent":
+                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36",
+                            // "Accept-Encoding": "gzip", // 使用gzip压缩让数据传输更快
+                        },
+                    },
+                    function (error, response, body) {
+                        if (error || !body || response.statusCode != 200) {
+                            console.log("下载失败-" + response ? response.statusCode : "未获取状态码");
+                            resolve(null);
+                        } else {
+                            resolve(body);
+                        }
+                    }
+                );
+            });
+        })();
+    } else {
+        fcontent = await axios.get(apiUrl).data;
+    }
+    var jsonObject = jsonParse(fcontent);
+    if (jsonObject && jsonObject.tree) {
+        for (const tree of jsonObject.tree) {
+            if (githubInfo.path_regex.test(tree.path)) {
+                var downloadInfo = {
+                    url: `https://github.com/${githubInfo.repo}/${githubInfo.owner}/raw/${githubInfo.branch}/${tree.path}`,
+                    path: `./${githubInfo.repo}_${githubInfo.owner}/${tree.path.split("/").reverse()[0]}`,
+                    type: "remote",
+                    tip_name: `${tree.path}`,
+                    decrypt: false,
+                    proxy: "http://127.0.0.1:7890",
+                };
+                // console.log(downloadInfo);
+                await download(downloadInfo);
+            }
+        }
+    }
+}
 
 /** 收集文件
  * @param {String} relativePath 路径
@@ -286,7 +353,7 @@ async function download(downloadConfig) {
                             },
                             function (error, response, body) {
                                 if (error || !body || response.statusCode != 200) {
-                                    console.log("下载失败-" + response ? response.statusCode : "未获取状态码");
+                                    console.log("下载失败-" + !!response ? response.statusCode : "未获取状态码");
                                     resolve(null);
                                 } else {
                                     // console.log("下载完毕-" + url + "|--" + response.statusCode);
@@ -318,5 +385,16 @@ async function download(downloadConfig) {
         }
     } catch (error) {
         console.log(`❌📥 【${typeDes}】${tip_name}时出错`, error);
+    }
+}
+
+function jsonParse(str) {
+    if (typeof str == "string") {
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+            console.log("数据转换失败", e);
+            return null;
+        }
     }
 }
