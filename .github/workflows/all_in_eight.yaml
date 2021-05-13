@@ -51,7 +51,7 @@ jobs:
             - name: 设置运行环境-Node.js 12
               uses: actions/setup-node@v2
               with:
-                  node-version: "12"
+                  node-version: "15.x"
             - name: 安装依赖包
               run: |
                   npm install
@@ -75,7 +75,7 @@ jobs:
             - name: 设置运行环境-Node.js 12
               uses: actions/setup-node@v2
               with:
-                  node-version: "12"
+                  node-version: "15.x"
             - name: 安装依赖包
               run: |
                   npm install
@@ -95,7 +95,7 @@ jobs:
             - name: 设置运行环境-Node.js 12
               uses: actions/setup-node@v2
               with:
-                  node-version: "12"
+                  node-version: "15.x"
             - name: 安装依赖包
               run: |
                   npm install
@@ -115,7 +115,7 @@ jobs:
             - name: 设置运行环境-Node.js 12
               uses: actions/setup-node@v2
               with:
-                  node-version: "12"
+                  node-version: "15.x"
             - name: 安装依赖包
               run: |
                   npm install
