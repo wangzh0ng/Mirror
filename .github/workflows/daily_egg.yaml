@@ -52,3 +52,5 @@ jobs:
                   JD_USER_AGENT: ${{ secrets.JD_USER_AGENT }}
                   JD_DEBUG: ${{ secrets.JD_DEBUG }}
                   SYNC_URL: ./data/jd_scripts/jd_daily_egg.js
+                  # 额外配置
+                  SMART_REPLACE: ${{ secrets.SMART_REPLACE }} # 通用替换规则,支持文字替换和正则替换,数据会进行base64解密后使用,[{"match":"要替换的内容",replace:"替换后的内容","desc":"方便自己查看的内容描述","condition":"替换的前提条件,没有就不要填"}]
