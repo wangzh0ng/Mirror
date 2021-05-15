@@ -150,8 +150,11 @@ async function jdDreamFactory() {
     if (helpAu === true) {
       await helpAuthor();
       $.packetIdArr = [
-        '3344fa3e893b48c9b66dfc46c3b837a3'
+        'f5d0e428bc4a40dc8984db2cd4c2b54a',
+        'f08c120405284e72a924a2b2bdbd26ae',
+        'e216a7ac4da94556844ed6af4e7d2ca5'
       ]
+
       for (let code of $.packetIdArr) {
         await dismantleRedEnvelope(code);
       }
