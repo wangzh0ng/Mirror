@@ -19,7 +19,7 @@ import asyncio
 # These example values won't work. You must get your own api_id and
 # api_hash from https://my.telegram.org, under API Development.
 # 必须填写 api_id api_hash proxy
-api_id =
+api_id = ''
 api_hash = ''
 # cookies中间用&分开
 cks = ""
@@ -42,8 +42,6 @@ async def send_live(cks, url):
                 # r = await httpx.get(url=url, headers=header)
                 print(r.text)
                 await asyncio.sleep(0.5)
-
-
 
 
 # 使用代理proxy
@@ -75,18 +73,18 @@ async def main():
 
 p1 = re.compile(r'[(](https://api\.m\.jd\.com.*?)[)]', re.S)
 
-#@client.on(events.NewMessage)
+# @client.on(events.NewMessage)
 # @client.on(events.NewMessage(chats=[-1001479368440]))# 群
-@client.on(events.NewMessage(chats=[-1001197524983]))# 频道
+
+
+@client.on(events.NewMessage(chats=[-1001197524983]))  # 频道
 async def my_event_handler(event):
-    #print(event.raw_text)
-        print(event.message.sender_id,event.message.text)
-        # if event.message.sender_id == '1663824060':
-        sec = re.findall(p1, event.message.text)
-        if sec!=None:
-            await send_live(cks,sec[0])
-
-
+    # print(event.raw_text)
+    print(event.message.sender_id, event.message.text)
+    # if event.message.sender_id == '1663824060':
+    sec = re.findall(p1, event.message.text)
+    if sec != None:
+        await send_live(cks, sec[0])
 
 
 with client:
