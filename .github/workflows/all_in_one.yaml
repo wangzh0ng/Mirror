@@ -104,7 +104,8 @@ jobs:
               run: |
                   node source_of_happiness.js
               env:
-                  SYNC_URL: ./data/jd_scripts/jd_bean_change.js
+                  SYNC_URL: ./javascript/all_bean_change.js
+                  #SYNC_URL: ./data/jd_scripts/jd_bean_change.js
     jd_blueCoin:
         name: 超市领蓝币
         runs-on: ubuntu-latest
