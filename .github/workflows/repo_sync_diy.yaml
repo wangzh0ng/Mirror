@@ -80,7 +80,7 @@ jobs:
             - name: "【同步】ZhiYi-N_Private-Script"
               uses: repo-sync/github-sync@v2
               with:
-                  source_repo: "https://github.com/ZhiYi-N_Private-Script.git"
+                  source_repo: "https://github.com/ZhiYi-N/Private-Script.git"
                   source_branch: "master"
                   destination_branch: "ZhiYi-N_Private-Script"
                   github_token: ${{ secrets.PAT }}
