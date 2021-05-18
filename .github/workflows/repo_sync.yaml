@@ -66,7 +66,7 @@ jobs:
               uses: repo-sync/github-sync@v2
               with:
                   source_repo: "https://github.com/NobyDa/Script.git"
-                  source_branch: "main"
+                  source_branch: "master"
                   destination_branch: "NobyDa_Script"
                   github_token: ${{ secrets.PAT }}
 
@@ -126,7 +126,7 @@ jobs:
               uses: repo-sync/github-sync@v2
               with:
                   source_repo: "https://github.com/evilbutcher/Quantumult_X.git"
-                  source_branch: "main"
+                  source_branch: "master"
                   destination_branch: "evilbutcher_Quantumult_X"
                   github_token: ${{ secrets.PAT }}
 
@@ -185,7 +185,7 @@ jobs:
             - name: "【同步】lowking_Scripts"
               uses: repo-sync/github-sync@v2
               with:
-                  source_repo: "https://github.com/lowking_Scripts.git"
+                  source_repo: "https://github.com/lowking/Scripts.git"
                   source_branch: "master"
                   destination_branch: "lowking_Scripts"
                   github_token: ${{ secrets.PAT }}
