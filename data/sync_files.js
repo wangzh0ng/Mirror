@@ -25,14 +25,6 @@ let gallerys = [
 ];
 let boxjses = [
     {
-        url: "https://raw.githubusercontent.com/NobyDa/Script/master/NobyDa_BoxJs.json",
-        path: "./NobyDa/boxjs.json",
-        type: "remote",
-        tip_name: "NobyDa_BoxJs",
-        decrypt: false,
-        proxy: "http://127.0.0.1:7890",
-    },
-    {
         url: "https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.json",
         path: "./chavy/boxjs.json",
         type: "remote",
@@ -58,14 +50,6 @@ let boxjses = [
     },
 ];
 let singleDownloads = [
-    {
-        url: "https://github.com/Zero-S1/xmly_speed/raw/master/xmly_speed.py",
-        path: "./Zero-S1/xmly_speed.py",
-        type: "remote",
-        tip_name: "xmly_speed.py",
-        decrypt: false,
-        proxy: "http://127.0.0.1:7890",
-    },
     {
         url: "https://raw.githubusercontent.com/songyangzz/QuantumultX/master/elem/elemSign.js",
         path: "./songyangzz/elemSign.js",
@@ -104,7 +88,21 @@ let githubApiDownloads = [
         repo: "nianyuguai",
         owner: "longzhuzhu",
         branch: "main",
-        path_regex: /^qx\/.*/,
+        path_regex: /.*/,
+        proxy: "http://127.0.0.1:7890",
+    },
+    {
+        repo: "monk-coder",
+        owner: "dust",
+        branch: "dust",
+        path_regex: /.*/,
+        proxy: "http://127.0.0.1:7890",
+    },
+    {
+        repo: "NobyDa",
+        owner: "Script",
+        branch: "master",
+        path_regex: /.*/,
         proxy: "http://127.0.0.1:7890",
     },
 
@@ -266,10 +264,19 @@ async function getFromGithubApi(githubInfo) {
     var jsonObject = jsonParse(fcontent);
     if (jsonObject && jsonObject.tree) {
         for (const tree of jsonObject.tree) {
+            let pointPath = `./${githubInfo.repo}_${githubInfo.owner}/${tree.path}`;
+            if (tree.type == "tree") {
+                var tmp = path.dirname(pointPath);
+                if (!fs.existsSync(tmp)) {
+                    fs.mkdirSync(tmp);
+                    console.log("无目录,已创建");
+                }
+                continue;
+            }
             if (githubInfo.path_regex.test(tree.path)) {
                 var downloadInfo = {
                     url: `https://github.com/${githubInfo.repo}/${githubInfo.owner}/raw/${githubInfo.branch}/${tree.path}`,
-                    path: `./${githubInfo.repo}_${githubInfo.owner}/${tree.path.split("/").reverse()[0]}`,
+                    path: pointPath,
                     type: "remote",
                     tip_name: `${tree.path}`,
                     decrypt: false,

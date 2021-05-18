@@ -8,14 +8,392 @@ on:
 jobs:
     repo-sync:
         runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
         steps:
             - uses: actions/checkout@v2
               with:
                   persist-credentials: false
-            - name: repo-sync
+            - name: "【基础数据同步】"
               uses: repo-sync/github-sync@v2
               with:
                   source_repo: ${{ secrets.SOURCE_REPO }}
                   source_branch: "main"
                   destination_branch: "main"
+                  github_token: ${{ secrets.PAT }}
+
+    CenBoMin_GithubSync:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】CenBoMin_GithubSync"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/CenBoMin/GithubSync.git"
+                  source_branch: "main"
+                  destination_branch: "CenBoMin_GithubSync"
+                  github_token: ${{ secrets.PAT }}
+
+    DD-D1_2020scripts:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】DD-D1_2020scripts"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/DD-D1/2020scripts.git"
+                  source_branch: "master"
+                  destination_branch: "DD-D1_2020scripts"
+                  github_token: ${{ secrets.PAT }}
+
+    NobyDa_Script:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】NobyDa_Script"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/NobyDa/Script.git"
+                  source_branch: "main"
+                  destination_branch: "NobyDa_Script"
+                  github_token: ${{ secrets.PAT }}
+
+    Peng-YM_QuanX:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】Peng-YM_QuanX"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/Peng-YM/QuanX.git"
+                  source_branch: "master"
+                  destination_branch: "Peng-YM_QuanX"
+                  github_token: ${{ secrets.PAT }}
+
+    ZhiYi-N_Private-Script:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】ZhiYi-N_Private-Script"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/ZhiYi-N_Private-Script.git"
+                  source_branch: "master"
+                  destination_branch: "ZhiYi-N_Private-Script"
+                  github_token: ${{ secrets.PAT }}
+
+    chavyleung_scripts:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】chavyleung_scripts"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/chavyleung/scripts.git"
+                  source_branch: "master"
+                  destination_branch: "chavyleung_scripts"
+                  github_token: ${{ secrets.PAT }}
+
+    evilbutcher_Quantumult_X:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】evilbutcher_Quantumult_X"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/evilbutcher/Quantumult_X.git"
+                  source_branch: "main"
+                  destination_branch: "evilbutcher_Quantumult_X"
+                  github_token: ${{ secrets.PAT }}
+
+    age174_feizao:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】age174_feizao"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/age174/-.git"
+                  source_branch: "main"
+                  destination_branch: "age174_feizao"
+                  github_token: ${{ secrets.PAT }}
+
+    id77_QuantumultX:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】id77_QuantumultX"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/id77/QuantumultX.git"
+                  source_branch: "master"
+                  destination_branch: "id77_QuantumultX"
+                  github_token: ${{ secrets.PAT }}
+
+    iepngs_Script:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】iepngs_Script"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/iepngs/Script.git"
+                  source_branch: "master"
+                  destination_branch: "iepngs_Script"
+                  github_token: ${{ secrets.PAT }}
+
+    lowking_Scripts:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】lowking_Scripts"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/lowking_Scripts.git"
+                  source_branch: "master"
+                  destination_branch: "lowking_Scripts"
+                  github_token: ${{ secrets.PAT }}
+
+    mock_lxk0301_ElsaKing_DogDog:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】ElsaKing_DogDog(虚假lxk0301)"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/ElsaKing/DogDog.git"
+                  source_branch: "main"
+                  destination_branch: "ElsaKing_DogDog"
+                  github_token: ${{ secrets.PAT }}
+
+    monk-coder_dust:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】monk-coder_dust"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/monk-coder/dust.git"
+                  source_branch: "dust"
+                  destination_branch: "monk-coder_dust"
+                  github_token: ${{ secrets.PAT }}
+
+    panghu999_ningmeng:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】panghu999_ningmeng"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/panghu999/ningmeng.git"
+                  source_branch: "main"
+                  destination_branch: "panghu999_ningmeng"
+                  github_token: ${{ secrets.PAT }}
+
+    passerby-b_JDDJ:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】passerby-b_JDDJ"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/passerby-b/JDDJ.git"
+                  source_branch: "main"
+                  destination_branch: "passerby-b_JDDJ"
+                  github_token: ${{ secrets.PAT }}
+
+    photonmang_quantumultX:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】photonmang_quantumultX"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/photonmang/quantumultX.git"
+                  source_branch: "master"
+                  destination_branch: "photonmang_quantumultX"
+                  github_token: ${{ secrets.PAT }}
+
+    qqsdff_script:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】qqsdff_script"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/qqsdff/script.git"
+                  source_branch: "main"
+                  destination_branch: "qqsdff_script"
+                  github_token: ${{ secrets.PAT }}
+
+    songyangzz_QuantumultX:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】songyangzz_QuantumultX"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/songyangzz/QuantumultX.git"
+                  source_branch: "master"
+                  destination_branch: "songyangzz_QuantumultX"
+                  github_token: ${{ secrets.PAT }}
+
+    GoodHolidays_Scripts:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】GoodHolidays_Scripts"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/GoodHolidays/Scripts.git"
+                  source_branch: "main"
+                  destination_branch: "GoodHolidays_Scripts"
+                  github_token: ${{ secrets.PAT }}
+
+
+    xl2101200:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】xl2101200"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/xl2101200/-.git"
+                  source_branch: "main"
+                  destination_branch: "xl2101200"
+                  github_token: ${{ secrets.PAT }}
+
+    toulanboy_scripts:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】qqsdff_script"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/toulanboy/scripts.git"
+                  source_branch: "master"
+                  destination_branch: "toulanboy_scripts"
+                  github_token: ${{ secrets.PAT }}
+
+
+    whyour_hundun:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】whyour_hundun"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/whyour/hundun.git"
+                  source_branch: "master"
+                  destination_branch: "whyour_hundun"
+                  github_token: ${{ secrets.PAT }}
+
+    zZPiglet_Task:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】zZPiglet_Task"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/zZPiglet/Task.git"
+                  source_branch: "main"
+                  destination_branch: "zZPiglet_Task"
+                  github_token: ${{ secrets.PAT }}
+
+    ziye888_JavaScript:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】ziye888_JavaScript"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/ziye888/JavaScript.git"
+                  source_branch: "main"
+                  destination_branch: "ziye888_JavaScript"
+                  github_token: ${{ secrets.PAT }}
+
+    ztxtop_x:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】ztxtop_x"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/ztxtop/x.git"
+                  source_branch: "main"
+                  destination_branch: "ztxtop_x"
                   github_token: ${{ secrets.PAT }}
