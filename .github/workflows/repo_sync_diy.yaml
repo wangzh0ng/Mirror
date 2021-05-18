@@ -1,4 +1,4 @@
-name: REPO_SYNC_DIY
+name: AA_REPO_SYNC_DIY
 
 on:
     workflow_dispatch:
@@ -353,6 +353,21 @@ jobs:
                   source_repo: "https://github.com/whyour/qinglong.git"
                   source_branch: "master"
                   destination_branch: "whyour_qinglong"
+                  github_token: ${{ secrets.PAT }}
+                  
+    SuMaiKaDe_jddockerbot:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】SuMaiKaDe_jddockerbot"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/SuMaiKaDe/jddockerbot.git"
+                  source_branch: "master"
+                  destination_branch: "SuMaiKaDe_jddockerbot"
                   github_token: ${{ secrets.PAT }}
 
     zZPiglet_Task:
