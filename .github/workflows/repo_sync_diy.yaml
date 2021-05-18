@@ -384,3 +384,108 @@ jobs:
                   source_branch: "main"
                   destination_branch: "ztxtop_x"
                   github_token: ${{ secrets.PAT }}
+
+    DivineEngine_Profiles:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】DivineEngine_Profiles"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/DivineEngine/Profiles.git"
+                  source_branch: "master"
+                  destination_branch: "DivineEngine_Profiles"
+                  github_token: ${{ secrets.PAT }}
+                  
+    KOP-XIAO_QuantumultX:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】KOP-XIAO_QuantumultX"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/KOP-XIAO/QuantumultX.git"
+                  source_branch: "master"
+                  destination_branch: "KOP-XIAO_QuantumultX"
+                  github_token: ${{ secrets.PAT }}
+
+    NobyDa_ND-AD:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】NobyDa_ND-AD"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/NobyDa/ND-AD.git"
+                  source_branch: "master"
+                  destination_branch: "NobyDa_ND-AD"
+                  github_token: ${{ secrets.PAT }}
+
+    elecV2_QuantumultX-Tools:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】elecV2_QuantumultX-Tools"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/elecV2/QuantumultX-Tools.git"
+                  source_branch: "master"
+                  destination_branch: "elecV2_QuantumultX-Tools"
+                  github_token: ${{ secrets.PAT }}
+
+    yichahucha_surge:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】yichahucha_surge"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/yichahucha/surge.git"
+                  source_branch: "master"
+                  destination_branch: "yichahucha_surge"
+                  github_token: ${{ secrets.PAT }}
+
+    Sunert_Script:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】Sunert_Script"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/Sunert/Script.git"
+                  source_branch: "master"
+                  destination_branch: "Sunert_Script"
+                  github_token: ${{ secrets.PAT }}
+
+    yangtingxiao_QuantumultX:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】yangtingxiao_QuantumultX"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/yangtingxiao/QuantumultX.git"
+                  source_branch: "master"
+                  destination_branch: "yangtingxiao_QuantumultX"
+                  github_token: ${{ secrets.PAT }}
