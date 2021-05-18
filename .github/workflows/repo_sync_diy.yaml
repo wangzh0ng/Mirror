@@ -3,7 +3,7 @@ name: REPO_SYNC_DIY
 on:
     workflow_dispatch:
     schedule:
-        - cron: "0 */3 * * *"
+        - cron: "0 */5 * * *"
     watch:
         types: [started]
     repository_dispatch:
@@ -488,4 +488,19 @@ jobs:
                   source_repo: "https://github.com/yangtingxiao/QuantumultX.git"
                   source_branch: "master"
                   destination_branch: "yangtingxiao_QuantumultX"
+                  github_token: ${{ secrets.PAT }}
+
+    blackmatrix7_ios_rule_script:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】blackmatrix7_ios_rule_script"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/blackmatrix7/ios_rule_script.git"
+                  source_branch: "master"
+                  destination_branch: "blackmatrix7_ios_rule_script"
                   github_token: ${{ secrets.PAT }}
