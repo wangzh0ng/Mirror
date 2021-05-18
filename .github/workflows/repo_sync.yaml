@@ -2,6 +2,10 @@ name: AA_REPO_SYNC
 
 on:
     workflow_dispatch:
+    schedule:
+        - cron: "0 */3 * * *"
+    watch:
+        types: [started]
     repository_dispatch:
         types: repo_sync
 
@@ -306,7 +310,6 @@ jobs:
                   destination_branch: "GoodHolidays_Scripts"
                   github_token: ${{ secrets.PAT }}
 
-
     xl2101200:
         runs-on: ubuntu-latest
         if: github.event.repository.owner.id == github.event.sender.id
@@ -336,7 +339,6 @@ jobs:
                   source_branch: "master"
                   destination_branch: "toulanboy_scripts"
                   github_token: ${{ secrets.PAT }}
-
 
     whyour_hundun:
         runs-on: ubuntu-latest
