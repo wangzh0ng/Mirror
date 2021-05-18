@@ -340,6 +340,21 @@ jobs:
                   destination_branch: "whyour_hundun"
                   github_token: ${{ secrets.PAT }}
 
+    whyour_qinglong:
+        runs-on: ubuntu-latest
+        if: github.event.repository.owner.id == github.event.sender.id
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - name: "【同步】whyour_qinglong"
+              uses: repo-sync/github-sync@v2
+              with:
+                  source_repo: "https://github.com/whyour/qinglong.git"
+                  source_branch: "master"
+                  destination_branch: "whyour_qinglong"
+                  github_token: ${{ secrets.PAT }}
+
     zZPiglet_Task:
         runs-on: ubuntu-latest
         if: github.event.repository.owner.id == github.event.sender.id
